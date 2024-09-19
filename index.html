@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cuentas Corrientes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts/app.js" defer></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Gestión de Cuentas Corrientes</h1>
+        <br>
+        <br>
+        <!-- Formulario para agregar clientes -->
+        <form id="client-form" class="mb-4">
+            <h2>Agregar Cliente</h2>
+            <br>
+            <div class="form-group">
+                <label for="client-name">Nombre:</label>
+                <input type="text" id="client-name" class="form-control" placeholder="Nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="client-phone">Teléfono:</label>
+                <input type="text" id="client-phone" class="form-control" placeholder="Teléfono">
+            </div>
+            <div class="form-group">
+                <label for="client-street">Domicilio:</label>
+                <input type="text" id="client-street" class="form-control" placeholder="Calle">
+                <input type="text" id="client-number" class="form-control" placeholder="Número">
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Cliente</button>
+        </form>
+
+        <!-- Formulario para registrar transacciones -->
+        <form id="account-form" class="mb-4">
+            <h2>Registrar Transacción</h2>
+            <br>
+            <div class="form-group">
+                <!-- Filtro de clientes -->
+                <input type="text" id="client-filter" class="form-control mb-4" placeholder="Filtrar Clientes">
+
+                <label for="select-client">Seleccionar Cliente</label>
+                <select id="select-client" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+                <label for="transaction-type">Tipo de Transacción</label>
+                <select id="transaction-type" class="form-control">
+                    <option value="purchase">Compra</option>
+                    <option value="payment">Pago</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Monto</label>
+                <input type="number" id="amount" class="form-control" placeholder="Monto" required>
+            </div>
+            <div class="form-group">
+                <label for="payment-method">Método de Pago</label>
+                <select id="payment-method" class="form-control">
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar Transacción</button>
+        </form>
+
+        <!-- Búsqueda en la tabla de deudas -->
+        <input type="text" id="debt-search" class="form-control mb-4" placeholder="Buscar Deudas">
+
+        <!-- Tabla de deudas -->
+        <table id="debt-list" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Transacciones</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <!-- Footer -->
+        <footer class="text-center mt-5">
+            <p>&copy; 2024 Gestión de Cuentas Corrientes</p>
+        </footer>
+    </div>
+</body>
+</html>
