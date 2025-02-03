@@ -7,18 +7,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="scripts/app.js" defer></script>
 </head>
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Gestión de Cuentas Corrientes</h1>
-        <br>
-        <br>
+        <button id="toggle-dark-mode" class="btn btn-secondary mb-4">Activar Modo Oscuro</button>
+
         <!-- Formulario para agregar clientes -->
         <form id="client-form" class="mb-4">
             <h2>Agregar Cliente</h2>
-            <br>
             <div class="form-group">
                 <label for="client-name">Nombre:</label>
                 <input type="text" id="client-name" class="form-control" placeholder="Nombre" required>
@@ -38,11 +38,8 @@
         <!-- Formulario para registrar transacciones -->
         <form id="account-form" class="mb-4">
             <h2>Registrar Transacción</h2>
-            <br>
             <div class="form-group">
-                <!-- Filtro de clientes -->
                 <input type="text" id="client-filter" class="form-control mb-4" placeholder="Filtrar Clientes">
-
                 <label for="select-client">Seleccionar Cliente</label>
                 <select id="select-client" class="form-control" required></select>
             </div>
