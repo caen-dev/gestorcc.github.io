@@ -1,61 +1,65 @@
+/* Estilos globales */
 body {
-    font-family:'Times New Roman', Times, serif;
-    background-color: #eceff1 ;
-    color: #333;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+    line-height: 1.6;
 }
 
 h1, h2 {
     color: #333;
     text-align: center;
+    margin-bottom: 20px;
 }
 
-.table th {
-    background-color: gray;
-    color: white;
+/* Formularios */
+form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
-.table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+.form-group {
+    margin-bottom: 15px;
 }
 
-.btn {
-    background-color: #007bff;
-    display: grid;
-    margin: auto;
-    width: 50%;
+button[type="submit"] {
+    background-color: #0d6efd;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.btn:hover {
-    background-color: #0056b3;
+button[type="submit"]:hover {
+    background-color: #0b5ed7;
 }
 
-.table .btn {
-    width: auto;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-    margin: 0.1rem;
+/* Tabla */
+.table {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.table .btn i {
-    font-size: 1.2rem; /* Tamaño del icono */
-}
-/* Alinear botones uno al lado del otro */
-.btn-container {
-    display: flex;
-    gap: 5px; /* Espacio entre los botones */
+.table th {
+    background-color: #0d6efd;
+    color: white;
+    text-align: center;
 }
 
-.btn-container .btn {
-    padding: 5px 10px; /* Tamaño reducido del botón */
-    font-size: 0.8em; /* Tamaño del texto reducido */
-    min-width: 40px; /* Ancho mínimo para los botones */
-    height: auto; /* Ajustar la altura automáticamente */
-    display: flex;
-    align-items: center; /* Centrar iconos verticalmente */
-    justify-content: center; /* Centrar iconos horizontalmente */
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
 }
-/* Estilos para los botones en la tabla de deudas */
+
+.table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Botones en la tabla */
 .btn-container {
     display: flex;
     gap: 5px;
@@ -64,44 +68,40 @@ h1, h2 {
 .btn-sm {
     padding: 5px 10px;
     font-size: 12px;
+    transition: background-color 0.3s ease;
 }
 
-/* Ajustar el tamaño de los botones */
-.toggle-info,
-.edit-client {
-    font-size: 14px;
-    padding: 5px;
+.btn-sm:hover {
+    background-color: #0b5ed7;
 }
 
+/* Enlaces "Ver más" */
 .view-more {
-    color: #007bff;
+    color: #0d6efd;
     text-decoration: none;
-    display: block;
-    margin-top: 5px;
+    font-size: 14px;
+    transition: color 0.3s ease;
 }
 
 .view-more:hover {
     text-decoration: underline;
+    color: #0b5ed7;
 }
 
-/* Iconos más pequeños si es necesario */
-.btn-container .btn i {
-    font-size: 0.8em; /* Tamaño del icono reducido */
-}
-/* Estilos para tema oscuro */
+/* Modo oscuro */
 .dark-mode {
-    background-color: #333;
-    color: white;
+    background-color: #212529;
+    color: #ffffff;
 }
 
 .dark-mode .table th {
-    background-color: #555;
+    background-color: #343a40;
 }
 
 .dark-mode .btn {
-    background-color: #444;
+    background-color: #495057;
 }
 
 .dark-mode .btn:hover {
-    background-color: #666;
+    background-color: #343a40;
 }
