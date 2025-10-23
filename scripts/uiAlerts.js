@@ -1,18 +1,15 @@
 (function (global) {
   const DEFAULT_CONFIRM_COLOR = '#0d6efd';
   const hasSwal = typeof global.Swal === 'function';
-  if (!hasSwal) console.error('[uiAlerts] SweetAlert2 no está disponible.');
 
-  // === DETECTAR MODO OSCURO ===
   function isDarkMode() {
     return document.body.classList.contains('dark-mode');
   }
 
-  // === CONFIGURACIÓN BASE ===
   function fire({ icon = 'info', title = '', text = '', showConfirmButton = true }) {
     const dark = isDarkMode();
 
-    const baseConfig = {
+    const config = {
       icon,
       title,
       text,
@@ -20,25 +17,18 @@
       confirmButtonColor: DEFAULT_CONFIRM_COLOR,
       background: dark ? '#1e2124' : '#ffffff',
       color: dark ? '#f8f9fa' : '#212529',
-      backdrop: dark
-        ? 'rgba(0, 0, 0, 0.75)'
-        : 'rgba(0, 0, 0, 0.3)',
-      customClass: {
-        popup: dark ? 'swal2-dark' : 'swal2-light',
-        title: 'swal-title',
-        htmlContainer: 'swal-text'
-      }
+      backdrop: dark ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.3)',
+      customClass: { popup: dark ? 'swal2-dark' : 'swal2-light', title: 'swal-title', htmlContainer: 'swal-text' }
     };
 
     if (hasSwal) {
-      return Swal.fire(baseConfig);
+      return Swal.fire(config);
     } else {
       alert(`${title}\n\n${text}`);
       return Promise.resolve();
     }
   }
 
-  // === API DE ALERTAS ===
   const uiAlerts = {
     success(t, x = '') { return fire({ icon: 'success', title: t, text: x }); },
     error(t, x = '') { return fire({ icon: 'error', title: t, text: x }); },
@@ -57,12 +47,11 @@
           color: dark ? '#f8f9fa' : '#212529',
           showConfirmButton: false,
           timer: 2200,
-          timerProgressBar: true,
-          showClass: { popup: 'animate__animated animate__fadeInDown' },
-          hideClass: { popup: 'animate__animated animate__fadeOutUp' },
+          timerProgressBar: true
         });
       } else {
         console.log(`[${icon}] ${msg}`);
+        return Promise.resolve();
       }
     },
 
@@ -80,7 +69,7 @@
           color: dark ? '#f8f9fa' : '#212529',
           confirmButtonText: 'Sí',
           cancelButtonText: 'Cancelar',
-          reverseButtons: true,
+          reverseButtons: true
         });
         return res.isConfirmed;
       } else {
@@ -90,5 +79,4 @@
   };
 
   global.uiAlerts = uiAlerts;
-  console.log('[uiAlerts] Estilos visuales activos (modo dinámico claro/oscuro).');
 })(window);
