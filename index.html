@@ -37,53 +37,68 @@
       </div>
     </div>
 
+    <!-- === DASHBOARD DE RESUMEN === -->
+    <section id="dashboard" class="mb-4">
+      <div class="stats-grid">
+        <div class="stat-card stat-clients">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-content">
+            <div class="stat-label">Clientes activos</div>
+            <div id="stat-clients" class="stat-value">0</div>
+          </div>
+        </div>
+        <div class="stat-card stat-debt">
+          <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+          <div class="stat-content">
+            <div class="stat-label">Deuda total</div>
+            <div id="stat-debt" class="stat-value">$0</div>
+          </div>
+        </div>
+        <div class="stat-card stat-payments">
+          <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-content">
+            <div class="stat-label">Pagos registrados</div>
+            <div id="stat-payments" class="stat-value">$0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- === Formulario para agregar clientes === -->
-    <form id="client-form" class="mb-4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <form id="client-form" class="mb-4" autocomplete="off">
       <h2>Agregar Cliente</h2>
 
       <div class="form-group">
         <label for="client-name">Nombre:</label>
-        <input type="text" id="client-name" class="form-control form-control-lg"
-          placeholder="Nombre" required autocomplete="off" autocorrect="off"
-          autocapitalize="none" spellcheck="false" />
+        <input type="text" id="client-name" class="form-control form-control-lg" placeholder="Nombre" required />
       </div>
 
       <div class="form-group">
         <label for="client-phone">Teléfono:</label>
-        <input type="tel" id="client-phone" class="form-control form-control-lg"
-          placeholder="Teléfono" autocomplete="off" autocorrect="off"
-          autocapitalize="none" inputmode="numeric" spellcheck="false" />
+        <input type="tel" id="client-phone" class="form-control form-control-lg" placeholder="Teléfono" />
       </div>
 
       <div class="form-group">
         <label for="client-street">Domicilio:</label>
         <div class="form-row">
           <div class="col-8">
-            <input type="text" id="client-street" class="form-control form-control-lg"
-              placeholder="Calle" autocomplete="off" autocorrect="off"
-              autocapitalize="none" spellcheck="false" />
+            <input type="text" id="client-street" class="form-control form-control-lg" placeholder="Calle" />
           </div>
           <div class="col-4">
-            <input type="text" id="client-number" class="form-control form-control-lg"
-              placeholder="N°" autocomplete="off" autocorrect="off"
-              autocapitalize="none" inputmode="numeric" spellcheck="false" />
+            <input type="text" id="client-number" class="form-control form-control-lg" placeholder="N°" />
           </div>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg btn-block">
-        Agregar Cliente
-      </button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Agregar Cliente</button>
     </form>
 
     <!-- === Formulario para registrar transacciones === -->
-    <form id="account-form" class="mb-4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <form id="account-form" class="mb-4" autocomplete="off">
       <h2>Registrar Transacción</h2>
 
       <div class="form-group">
-        <input type="text" id="client-filter" class="form-control mb-3 form-control-lg"
-          placeholder="Filtrar Clientes" autocomplete="off" autocorrect="off"
-          autocapitalize="none" spellcheck="false" />
+        <input type="text" id="client-filter" class="form-control mb-3 form-control-lg" placeholder="Filtrar Clientes" />
         <label for="select-client">Seleccionar Cliente</label>
         <select id="select-client" class="form-control form-control-lg" required></select>
       </div>
@@ -98,9 +113,7 @@
 
       <div class="form-group">
         <label for="amount">Monto</label>
-        <input type="number" id="amount" class="form-control form-control-lg"
-          placeholder="Monto" required autocomplete="off" inputmode="decimal"
-          autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input type="number" id="amount" class="form-control form-control-lg" placeholder="Monto" required />
       </div>
 
       <div class="form-group">
@@ -112,16 +125,12 @@
         </select>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg btn-block">
-        Registrar Transacción
-      </button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Registrar Transacción</button>
     </form>
 
-    <!-- === Buscador y tabla de deudas === -->
+    <!-- === Tabla de deudas === -->
     <h2>Resumen de Deudas</h2>
-    <input type="text" id="debt-search" class="form-control form-control-lg mb-4"
-      placeholder="Buscar Deudas" autocomplete="off" autocorrect="off"
-      autocapitalize="none" spellcheck="false" />
+    <input type="text" id="debt-search" class="form-control form-control-lg mb-4" placeholder="Buscar Deudas" />
 
     <div class="table-responsive">
       <table id="debt-list" class="table table-bordered table-striped">
@@ -143,4 +152,4 @@
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" defer></script>
 </body>
-</html>
+                                   </html>
