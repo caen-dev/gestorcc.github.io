@@ -20,6 +20,22 @@
     error(t, x = '') { return fire({ icon: 'error', title: t, text: x }); },
     warning(t, x = '') { return fire({ icon: 'warning', title: t, text: x }); },
     info(t, x = '') { return fire({ icon: 'info', title: t, text: x }); },
+    toast(msg, icon = 'success') {
+      if (hasSwal) {
+        return Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon,
+          title: msg,
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true
+        });
+      } else {
+        console.log(`[${icon}] ${msg}`);
+        return Promise.resolve();
+      }
+    },
     async confirm(t, x = '¿Deseás continuar?') {
       if (hasSwal) {
         const res = await Swal.fire({
