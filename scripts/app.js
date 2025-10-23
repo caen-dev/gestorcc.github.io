@@ -47,11 +47,47 @@ $(document).ready(function () {
       getAll.result.forEach(c => clients[c.name] = c);
       updateClientSelect();
       updateClientDebtList();
+      renderStats();
     };
   }
 
   function saveClient(client) {
     db.transaction(storeName, 'readwrite').objectStore(storeName).put(client);
+  }
+
+  /* === Helpers métricas === */
+  function formatCurrency(n) {
+    return n.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 2 });
+  }
+
+  function computeStats() {
+    let activeClients = 0;
+    let totalDebt = 0;
+    let totalPayments = 0;
+
+    Object.values(clients).forEach(c => {
+      if (!c) return;
+      if (c.balance && c.balance > 0) {
+        activeClients += 1;
+        totalDebt += c.balance;
+      }
+      if (Array.isArray(c.transactions)) {
+        c.transactions.forEach(t => {
+          if (t && t.type === 'Pago' && typeof t.amount === 'number') {
+            totalPayments += t.amount;
+          }
+        });
+      }
+    });
+
+    return { activeClients, totalDebt, totalPayments };
+  }
+
+  function renderStats() {
+    const { activeClients, totalDebt, totalPayments } = computeStats();
+    $('#stat-clients').text(activeClients);
+    $('#stat-debt').text(formatCurrency(totalDebt));
+    $('#stat-payments').text(formatCurrency(totalPayments));
   }
 
   /* === Agregar Cliente === */
@@ -71,6 +107,8 @@ $(document).ready(function () {
     updateClientSelect();
     $('#client-form').trigger('reset');
     uiAlerts.toast('Cliente agregado correctamente ✅');
+
+    renderStats();
   });
 
   /* === Registrar Transacción === */
@@ -102,7 +140,7 @@ $(document).ready(function () {
         return uiAlerts.warning('Sin deuda', 'Este cliente no tiene deuda pendiente.');
       if (amount > c.balance)
         return uiAlerts.warning('Monto excedido',
-          `El pago supera la deuda actual ($${c.balance.toLocaleString('es-AR')}).`);
+          `El pago supera la deuda actual (${formatCurrency(c.balance)}).`);
       c.transactions.push({ type: 'Pago', amount, date, paymentMethod });
       c.balance -= amount;
       if (c.balance < 0) c.balance = 0;
@@ -114,6 +152,8 @@ $(document).ready(function () {
     clients[clientName] = c;
     updateClientDebtList();
     uiAlerts.toast('Transacción registrada correctamente ✅');
+
+    renderStats();
   }
 
   /* === Select de clientes (con filtro) === */
@@ -158,7 +198,7 @@ $(document).ready(function () {
       const $row = $('<tr>').append(
         $('<td>').html(`<strong>${name}</strong>`).append($btns),
         $('<td>').html(recent),
-        $('<td>').text(`$${c.balance.toLocaleString('es-AR')}`)
+        $('<td>').text(`${formatCurrency(c.balance)}`)
       );
 
       const $infoRow = $('<tr>')
@@ -229,6 +269,8 @@ $(document).ready(function () {
       updateClientSelect();
       updateClientDebtList();
       uiAlerts.toast('Cliente actualizado correctamente ✏️');
+
+      renderStats();
     });
   });
 
