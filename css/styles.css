@@ -328,7 +328,24 @@ button[type="submit"]:hover, #toggle-dark-mode:hover {
 .dark-mode .slider::before {
   background-color: #fff;
 }
-
+/* ==== SweetAlert2 Personalizado ==== */
+.swal2-popup.swal2-dark {
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+}
+.swal2-popup.swal2-light {
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+}
+.swal-title {
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.swal-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
 /* ============================== */
 /*           RESPONSIVE           */
 /* ============================== */
@@ -352,3 +369,4 @@ button[type="submit"]:hover, #toggle-dark-mode:hover {
     font-size: 0.75rem;
   }
   }
+
