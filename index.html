@@ -1,88 +1,146 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Cuentas Corrientes</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="scripts/app.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gestión de Cuentas Corrientes</title>
+
+  <!-- Bootstrap y Font Awesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Librerías JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+
+  <!-- Módulos propios -->
+  <script src="scripts/modules/uiAlerts.js" defer></script>
+  <script src="scripts/app.js" defer></script>
 </head>
+
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Gestión de Cuentas Corrientes</h1>
-        <button id="toggle-dark-mode" class="btn btn-secondary mb-4">Activar Modo Oscuro</button>
+  <div class="container mt-4 mb-5 px-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+      <h1 class="text-center flex-grow-1 mb-3 mb-md-0">Gestión de Cuentas Corrientes</h1>
 
-        <!-- Formulario para agregar clientes -->
-        <form id="client-form" class="mb-4">
-            <h2>Agregar Cliente</h2>
-            <div class="form-group">
-                <label for="client-name">Nombre:</label>
-                <input type="text" id="client-name" class="form-control" placeholder="Nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="client-phone">Teléfono:</label>
-                <input type="text" id="client-phone" class="form-control" placeholder="Teléfono">
-            </div>
-            <div class="form-group">
-                <label for="client-street">Domicilio:</label>
-                <input type="text" id="client-street" class="form-control" placeholder="Calle">
-                <input type="text" id="client-number" class="form-control" placeholder="Número">
-            </div>
-            <button type="submit" class="btn btn-primary">Agregar Cliente</button>
-        </form>
-
-        <!-- Formulario para registrar transacciones -->
-        <form id="account-form" class="mb-4">
-            <h2>Registrar Transacción</h2>
-            <div class="form-group">
-                <input type="text" id="client-filter" class="form-control mb-4" placeholder="Filtrar Clientes">
-                <label for="select-client">Seleccionar Cliente</label>
-                <select id="select-client" class="form-control" required></select>
-            </div>
-            <div class="form-group">
-                <label for="transaction-type">Tipo de Transacción</label>
-                <select id="transaction-type" class="form-control">
-                    <option value="purchase">Compra</option>
-                    <option value="payment">Pago</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="amount">Monto</label>
-                <input type="number" id="amount" class="form-control" placeholder="Monto" required>
-            </div>
-            <div class="form-group">
-                <label for="payment-method">Método de Pago</label>
-                <select id="payment-method" class="form-control">
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrar Transacción</button>
-        </form>
-
-        <!-- Búsqueda en la tabla de deudas -->
-        <input type="text" id="debt-search" class="form-control mb-4" placeholder="Buscar Deudas">
-
-        <!-- Tabla de deudas -->
-        <table id="debt-list" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Transacciones</th>
-                    <th>Saldo</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <!-- Footer -->
-        <footer class="text-center mt-5">
-            <p>&copy; 2024 Gestión de Cuentas Corrientes</p>
-        </footer>
+      <!-- Switch de modo oscuro -->
+      <div class="theme-switch-container text-center">
+        <label class="theme-switch">
+          <input type="checkbox" id="toggle-dark-mode">
+          <span class="slider"></span>
+          <i class="fas fa-sun icon-light"></i>
+          <i class="fas fa-moon icon-dark"></i>
+        </label>
+      </div>
     </div>
+
+    <!-- === Formulario para agregar clientes === -->
+    <form id="client-form" class="mb-4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <h2>Agregar Cliente</h2>
+
+      <div class="form-group">
+        <label for="client-name">Nombre:</label>
+        <input type="text" id="client-name" class="form-control form-control-lg"
+          placeholder="Nombre" required autocomplete="off" autocorrect="off"
+          autocapitalize="none" spellcheck="false" />
+      </div>
+
+      <div class="form-group">
+        <label for="client-phone">Teléfono:</label>
+        <input type="tel" id="client-phone" class="form-control form-control-lg"
+          placeholder="Teléfono" autocomplete="off" autocorrect="off"
+          autocapitalize="none" inputmode="numeric" spellcheck="false" />
+      </div>
+
+      <div class="form-group">
+        <label for="client-street">Domicilio:</label>
+        <div class="form-row">
+          <div class="col-8">
+            <input type="text" id="client-street" class="form-control form-control-lg"
+              placeholder="Calle" autocomplete="off" autocorrect="off"
+              autocapitalize="none" spellcheck="false" />
+          </div>
+          <div class="col-4">
+            <input type="text" id="client-number" class="form-control form-control-lg"
+              placeholder="N°" autocomplete="off" autocorrect="off"
+              autocapitalize="none" inputmode="numeric" spellcheck="false" />
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Agregar Cliente
+      </button>
+    </form>
+
+    <!-- === Formulario para registrar transacciones === -->
+    <form id="account-form" class="mb-4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <h2>Registrar Transacción</h2>
+
+      <div class="form-group">
+        <input type="text" id="client-filter" class="form-control mb-3 form-control-lg"
+          placeholder="Filtrar Clientes" autocomplete="off" autocorrect="off"
+          autocapitalize="none" spellcheck="false" />
+        <label for="select-client">Seleccionar Cliente</label>
+        <select id="select-client" class="form-control form-control-lg" required></select>
+      </div>
+
+      <div class="form-group">
+        <label for="transaction-type">Tipo de Transacción</label>
+        <select id="transaction-type" class="form-control form-control-lg">
+          <option value="purchase">Compra</option>
+          <option value="payment">Pago</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Monto</label>
+        <input type="number" id="amount" class="form-control form-control-lg"
+          placeholder="Monto" required autocomplete="off" inputmode="decimal"
+          autocorrect="off" autocapitalize="none" spellcheck="false" />
+      </div>
+
+      <div class="form-group">
+        <label for="payment-method">Método de Pago</label>
+        <select id="payment-method" class="form-control form-control-lg">
+          <option value="efectivo">Efectivo</option>
+          <option value="tarjeta">Tarjeta</option>
+          <option value="transferencia">Transferencia</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Registrar Transacción
+      </button>
+    </form>
+
+    <!-- === Buscador y tabla de deudas === -->
+    <h2>Resumen de Deudas</h2>
+    <input type="text" id="debt-search" class="form-control form-control-lg mb-4"
+      placeholder="Buscar Deudas" autocomplete="off" autocorrect="off"
+      autocapitalize="none" spellcheck="false" />
+
+    <div class="table-responsive">
+      <table id="debt-list" class="table table-bordered table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>Cliente</th>
+            <th>Transacciones</th>
+            <th>Saldo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <footer class="text-center mt-5 mb-3 small">
+      <p>&copy; 2024 - Gestión de Cuentas Corrientes | Desarrollado por Pablo Nahuel García</p>
+    </footer>
+  </div>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" defer></script>
 </body>
 </html>
