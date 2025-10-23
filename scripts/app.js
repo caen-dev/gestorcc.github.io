@@ -4,7 +4,7 @@ $(document).ready(function () {
   const storeName = 'clientsStore';
   let clients = {};
 
-  // === MODO OSCURO (switch con checkbox) ===
+  // === MODO OSCURO ===
   const DARK_KEY = 'gestorcc:darkmode';
   const toggleSwitch = document.getElementById('toggle-dark-mode');
   if (toggleSwitch) {
@@ -20,7 +20,7 @@ $(document).ready(function () {
     });
   }
 
-  /* === IndexedDB === */
+  // === IndexedDB ===
   const request = indexedDB.open(dbName, 1);
   request.onupgradeneeded = e => {
     db = e.target.result;
@@ -35,6 +35,7 @@ $(document).ready(function () {
     const tx = db.transaction(storeName, 'readonly');
     const store = tx.objectStore(storeName);
     const getAll = store.getAll();
+
     getAll.onsuccess = () => {
       clients = {};
       getAll.result.forEach(c => clients[c.name] = c);
@@ -44,16 +45,18 @@ $(document).ready(function () {
   }
 
   function saveClient(client) {
-    db.transaction(storeName, 'readwrite').objectStore(storeName).put(client);
+    const tx = db.transaction(storeName, 'readwrite');
+    tx.objectStore(storeName).put(client);
   }
 
-  /* === Agregar Cliente === */
+  // === AGREGAR CLIENTE ===
   $('#client-form').on('submit', function (e) {
     e.preventDefault();
     const name = $('#client-name').val().trim();
     const phone = $('#client-phone').val().trim() || '-';
     const street = $('#client-street').val().trim() || '-';
     const number = $('#client-number').val().trim() || '-';
+
     if (!name) return uiAlerts.error('Campo obligatorio', 'El nombre no puede estar vacío.');
     if (clients[name]) return uiAlerts.warning('Duplicado', 'El cliente ya existe.');
 
@@ -65,35 +68,34 @@ $(document).ready(function () {
     uiAlerts.toast('Cliente agregado correctamente ✅');
   });
 
-  /* === Registrar Transacción === */
+  // === REGISTRAR TRANSACCIÓN ===
   $('#account-form').on('submit', function (e) {
     e.preventDefault();
     const clientName = $('#select-client').val();
-    const type = $('#transaction-type').val(); // 'purchase' | 'payment'
+    const type = $('#transaction-type').val();
     const amount = parseFloat($('#amount').val());
     const method = $('#payment-method').val();
 
     if (!clientName) return uiAlerts.warning('Seleccione un cliente', 'Debes elegir un cliente.');
-    if (!amount || isNaN(amount) || amount <= 0) return uiAlerts.error('Monto inválido', 'Ingrese un monto válido.');
+    if (!amount || isNaN(amount) || amount <= 0)
+      return uiAlerts.error('Monto inválido', 'Ingrese un monto numérico mayor que cero.');
 
-    handleTransaction(clientName, type, amount, method);
-    $('#account-form').trigger('reset');
-  });
-
-  function handleTransaction(clientName, type, amount, paymentMethod) {
     const c = clients[clientName];
-    const date = new Date().toLocaleDateString();
     if (!c) return uiAlerts.error('Error', 'El cliente no existe.');
 
+    const date = new Date().toLocaleDateString();
+
     if (type === 'purchase') {
-      c.transactions.push({ type: 'Compra', amount, date, paymentMethod });
+      c.transactions.push({ type: 'Compra', amount, date, paymentMethod: method });
       c.balance += amount;
     } else if (type === 'payment') {
-      if (c.balance < amount) {
+      if (c.balance <= 0)
+        return uiAlerts.warning('Sin deuda', 'Este cliente no tiene deuda pendiente.');
+      if (amount > c.balance)
         return uiAlerts.warning('Monto excedido',
-          `El monto ingresado supera la deuda actual ($${c.balance.toLocaleString('es-AR')}).`);
-      }
-      c.transactions.push({ type: 'Pago', amount, date, paymentMethod });
+          `El pago supera la deuda actual ($${c.balance.toLocaleString('es-AR')}).`);
+
+      c.transactions.push({ type: 'Pago', amount, date, paymentMethod: method });
       c.balance -= amount;
       if (c.balance < 0) c.balance = 0;
     } else {
@@ -101,48 +103,37 @@ $(document).ready(function () {
     }
 
     saveClient(c);
+    clients[clientName] = c;
     updateClientDebtList();
-    uiAlerts.toast('Transacción registrada ✅');
-  }
+    $('#account-form').trigger('reset');
+    uiAlerts.toast('Transacción registrada correctamente ✅');
+  });
 
-  /* === Select de clientes (con filtro) === */
+  // === SELECT CLIENTE CON FILTRO ===
   function updateClientSelect(filter = '') {
     const $select = $('#select-client').empty();
     Object.keys(clients).sort().forEach(name => {
-      if (name.toLowerCase().includes(filter.toLowerCase())) {
+      if (name.toLowerCase().includes(filter.toLowerCase()))
         $select.append(new Option(name, name));
-      }
     });
   }
   $('#client-filter').on('input', e => updateClientSelect(e.target.value));
 
-  /* === Render de tabla de deudas === */
+  // === TABLA DE DEUDAS ===
   function updateClientDebtList() {
     const $tbody = $('#debt-list tbody').empty();
 
     Object.keys(clients).forEach(name => {
       const c = clients[name];
-      if (!c) return;
-
-      // Mostrar solo clientes con movimientos y saldo (resumen de deudas)
-      if (c.transactions.length === 0 || c.balance <= 0) return;
+      if (!c || c.transactions.length === 0) return;
 
       const recent = c.transactions.slice(-5).map(t =>
         `${t.date} - ${t.type}: $${t.amount.toLocaleString('es-AR')} (${t.paymentMethod})`
       ).join('<br>') + (c.transactions.length > 5 ? '<br><a href="#" class="view-more">Ver más</a>' : '');
 
-      // Botones en primera columna (sin añadir columna "Acciones")
       const $btns = $('<div>').addClass('btn-container mt-2').append(
-        $('<button>')
-          .addClass('btn btn-info btn-sm toggle-info')
-          .attr('title', 'Ver información')
-          .html('<i class="fas fa-info-circle"></i>')
-          .data('client', name),
-        $('<button>')
-          .addClass('btn btn-warning btn-sm edit-client')
-          .attr('title', 'Editar cliente')
-          .html('<i class="fas fa-edit"></i>')
-          .data('client', name)
+        $('<button>').addClass('btn btn-info btn-sm toggle-info').html('<i class="fas fa-info-circle"></i>').data('client', name),
+        $('<button>').addClass('btn btn-warning btn-sm edit-client').html('<i class="fas fa-edit"></i>').data('client', name)
       );
 
       const $row = $('<tr>').append(
@@ -151,21 +142,18 @@ $(document).ready(function () {
         $('<td>').text(`$${c.balance.toLocaleString('es-AR')}`)
       );
 
-      const $infoRow = $('<tr>')
-        .addClass('personal-info-row')
-        .hide()
-        .append(
-          $('<td colspan="3">').html(`
-            <strong>Teléfono:</strong> ${c.phone}<br>
-            <strong>Domicilio:</strong> ${c.street} ${c.number}
-          `)
-        );
+      const $infoRow = $('<tr>').addClass('personal-info-row').hide().append(
+        $('<td colspan="3">').html(`
+          <strong>Teléfono:</strong> ${c.phone}<br>
+          <strong>Domicilio:</strong> ${c.street} ${c.number}
+        `)
+      );
 
       $tbody.append($row, $infoRow);
     });
   }
 
-  /* === Delegados de eventos de tabla === */
+  // === EVENTOS DE TABLA ===
   $(document).on('click', '.view-more', function (e) {
     e.preventDefault();
     const clientName = $(this).closest('tr').find('.edit-client').data('client');
@@ -182,7 +170,7 @@ $(document).ready(function () {
     $(this).closest('tr').next('.personal-info-row').slideToggle();
   });
 
-  // === Editar Cliente con auto-scroll (manteniendo tu lógica) ===
+  // === EDITAR CLIENTE ===
   $(document).on('click', '.edit-client', function () {
     const originalName = $(this).data('client');
     const c = clients[originalName];
@@ -206,6 +194,7 @@ $(document).ready(function () {
       const phone = $('#client-phone').val().trim() || '-';
       const street = $('#client-street').val().trim() || '-';
       const number = $('#client-number').val().trim() || '-';
+
       if (!name) return uiAlerts.error('Campo obligatorio', 'El nombre no puede estar vacío.');
       if (clients[name] && name !== originalName)
         return uiAlerts.warning('Duplicado', 'Ya existe otro cliente con ese nombre.');
@@ -222,19 +211,15 @@ $(document).ready(function () {
     });
   });
 
-  /* === Filtro de tabla de deudas === */
+  // === BUSCADOR DE TABLA ===
   $('#debt-search').on('input', function () {
     const txt = $(this).val().toLowerCase();
-    const $rows = $('#debt-list tbody tr');
-
-    $rows.each(function () {
+    $('#debt-list tbody tr').each(function () {
       const $tr = $(this);
-      if ($tr.hasClass('personal-info-row')) return; // se controla junto a su anterior
-
-      const visible = $tr.text().toLowerCase().indexOf(txt) > -1;
+      if ($tr.hasClass('personal-info-row')) return;
+      const visible = $tr.text().toLowerCase().includes(txt);
       $tr.toggle(visible);
-      const $info = $tr.next('.personal-info-row');
-      if ($info.length) $info.toggle(visible && $tr.is(':visible'));
+      $tr.next('.personal-info-row').toggle(visible);
     });
   });
 });
