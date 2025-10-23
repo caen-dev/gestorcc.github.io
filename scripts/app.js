@@ -19,6 +19,13 @@ $(document).ready(function () {
       localStorage.setItem(DARK_KEY, enabled ? '1' : '0');
     });
   }
+
+ // Aplicar estado inicial
+  if (isDark) {
+    document.body.classList.add('dark-mode');
+    toggleSwitch.checked = true;
+  }
+  
     // Animación de transición entre modos
   function animateThemeTransition() {
     document.body.classList.add('theme-transition');
@@ -235,4 +242,5 @@ $(document).ready(function () {
     });
   });
 });
+
 
