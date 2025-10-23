@@ -28,6 +28,18 @@ form {
   border-radius: 8px;
   height: auto;
   padding: 12px;
+  border: 1px solid #ced4da;
+  color: #212529;
+  background-color: #fff;
+}
+
+.form-control::placeholder {
+  color: #6c757d;
+}
+
+label {
+  font-weight: 500;
+  color: #212529;
 }
 
 button[type="submit"], #toggle-dark-mode {
@@ -60,6 +72,7 @@ button[type="submit"]:hover, #toggle-dark-mode:hover {
 .table td {
   font-size: 0.9rem;
   vertical-align: middle;
+  color: #212529;
 }
 
 .table tbody tr:hover {
@@ -77,6 +90,12 @@ button[type="submit"]:hover, #toggle-dark-mode:hover {
   padding: 5px 10px;
   font-size: 0.8rem;
   border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-info i,
+.btn-warning i {
+  color: #fff;
 }
 
 /* ===== Enlaces ===== */
@@ -151,47 +170,135 @@ button[type="submit"]:hover, #toggle-dark-mode:hover {
   opacity: 1;
 }
 
-/* ===== Modo oscuro ===== */
+/* =============================== */
+/*          MODO OSCURO            */
+/* =============================== */
 .dark-mode {
-  background-color: #1c1f23;
+  background-color: #181a1b;
   color: #f8f9fa;
 }
 
-.dark-mode h1, .dark-mode h2, .dark-mode label {
-  color: #f8f9fa;
+/* Títulos y texto general */
+.dark-mode h1 {
+  color: #f1f3f5;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+.dark-mode h2 {
+  color: #dee2e6;
+}
+.dark-mode label,
+.dark-mode p,
+.dark-mode td {
+  color: #e9ecef;
 }
 
+/* Formularios */
 .dark-mode form {
-  background-color: #2b3035;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  background-color: #202326;
+  border: 1px solid #2f3338;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .dark-mode input,
 .dark-mode select {
-  background-color: #2b3035;
+  background-color: #2b2f33;
   color: #f8f9fa;
-  border-color: #495057;
+  border: 1px solid #495057;
 }
 
-.dark-mode input::placeholder {
+.dark-mode input::placeholder,
+.dark-mode select::placeholder {
   color: #adb5bd;
 }
 
+.dark-mode input:focus,
+.dark-mode select:focus {
+  border-color: #66b2ff;
+  box-shadow: 0 0 5px #66b2ff;
+}
+
+/* Tabla */
+.dark-mode .table {
+  background-color: #1c1f22;
+  border-color: #2b2f33;
+}
+
 .dark-mode .table th {
-  background-color: #343a40;
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.dark-mode .table td {
+  color: #e9ecef;
 }
 
 .dark-mode .table tbody tr:nth-child(even) {
-  background-color: #2b3035;
+  background-color: #24282b;
 }
 
+.dark-mode .table tbody tr:nth-child(odd) {
+  background-color: #1e2124;
+}
+
+.dark-mode .table tbody tr:hover {
+  background-color: #2f3338;
+}
+
+/* Botones */
 .dark-mode .btn {
-  background-color: #495057;
+  color: #f8f9fa;
+  border: none;
+}
+
+.dark-mode .btn-primary {
+  background-color: #0d6efd;
+}
+.dark-mode .btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+.dark-mode .btn-info {
+  background-color: #17a2b8;
+}
+.dark-mode .btn-info:hover {
+  background-color: #138496;
+}
+
+.dark-mode .btn-warning {
+  background-color: #f0ad4e;
+  color: #212529;
+}
+.dark-mode .btn-warning:hover {
+  background-color: #ec971f;
+  color: #fff;
+}
+
+/* Íconos */
+.dark-mode i {
   color: #f8f9fa;
 }
+.dark-mode .btn-warning i {
+  color: #212529;
+}
+.dark-mode .btn-warning:hover i {
+  color: #fff;
+}
 
-.dark-mode .btn:hover {
-  background-color: #343a40;
+/* Enlaces */
+.dark-mode .view-more {
+  color: #4dabf7;
+}
+.dark-mode .view-more:hover {
+  color: #91d5ff;
+  text-decoration: underline;
+}
+
+/* Switch */
+.dark-mode .slider {
+  background-color: #495057;
+}
+.dark-mode .slider::before {
+  background-color: #f1f3f5;
 }
 
 /* ===== Responsive ===== */
