@@ -1,108 +1,217 @@
-/* Estilos globales */
+/* ===== Estilos globales ===== */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
-    color: #212529;
-    line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f8f9fa;
+  color: #212529;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1, h2 {
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-/* Formularios */
+/* ===== Formularios ===== */
 form {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
-.form-group {
-    margin-bottom: 15px;
+.form-control {
+  font-size: 1rem;
+  border-radius: 8px;
+  height: auto;
+  padding: 12px;
 }
 
-button[type="submit"] {
-    background-color: #0d6efd;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+button[type="submit"], #toggle-dark-mode {
+  background-color: #0d6efd;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
-    background-color: #0b5ed7;
+button[type="submit"]:hover, #toggle-dark-mode:hover {
+  background-color: #0b5ed7;
 }
 
-/* Tabla */
+/* ===== Tabla ===== */
 .table {
-    margin-top: 20px;
-    border-radius: 8px;
-    overflow: hidden;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .table th {
-    background-color: #0d6efd;
-    color: white;
-    text-align: center;
+  background-color: #0d6efd;
+  color: white;
+  text-align: center;
+  font-size: 0.95rem;
 }
 
-.table tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
+.table td {
+  font-size: 0.9rem;
+  vertical-align: middle;
 }
 
 .table tbody tr:hover {
-    background-color: #e9ecef;
+  background-color: #e9ecef;
 }
 
-/* Botones en la tabla */
+/* ===== Botones en tabla ===== */
 .btn-container {
-    display: flex;
-    gap: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .btn-sm {
-    padding: 5px 10px;
-    font-size: 12px;
-    transition: background-color 0.3s ease;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 6px;
 }
 
-.btn-sm:hover {
-    background-color: #0b5ed7;
-}
-
-/* Enlaces "Ver más" */
+/* ===== Enlaces ===== */
 .view-more {
-    color: #0d6efd;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.3s ease;
+  color: #0d6efd;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 
 .view-more:hover {
-    text-decoration: underline;
-    color: #0b5ed7;
+  text-decoration: underline;
+  color: #0b5ed7;
 }
 
-/* Modo oscuro */
+/* ===== Switch de modo oscuro ===== */
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.slider {
+  position: relative;
+  width: 46px;
+  height: 22px;
+  background-color: #ccc;
+  border-radius: 22px;
+  transition: background-color 0.3s ease;
+  margin: 0 8px;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.theme-switch input:checked + .slider {
+  background-color: #0d6efd;
+}
+
+.theme-switch input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+.icon-light,
+.icon-dark {
+  font-size: 1rem;
+  color: #666;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.theme-switch input:checked ~ .icon-light {
+  opacity: 0.5;
+  color: #aaa;
+}
+
+.theme-switch input:checked ~ .icon-dark {
+  color: #0d6efd;
+  opacity: 1;
+}
+
+/* ===== Modo oscuro ===== */
 .dark-mode {
-    background-color: #212529;
-    color: #ffffff;
+  background-color: #1c1f23;
+  color: #f8f9fa;
+}
+
+.dark-mode h1, .dark-mode h2, .dark-mode label {
+  color: #f8f9fa;
+}
+
+.dark-mode form {
+  background-color: #2b3035;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.dark-mode input,
+.dark-mode select {
+  background-color: #2b3035;
+  color: #f8f9fa;
+  border-color: #495057;
+}
+
+.dark-mode input::placeholder {
+  color: #adb5bd;
 }
 
 .dark-mode .table th {
-    background-color: #343a40;
+  background-color: #343a40;
+}
+
+.dark-mode .table tbody tr:nth-child(even) {
+  background-color: #2b3035;
 }
 
 .dark-mode .btn {
-    background-color: #495057;
+  background-color: #495057;
+  color: #f8f9fa;
 }
 
 .dark-mode .btn:hover {
-    background-color: #343a40;
+  background-color: #343a40;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  form {
+    padding: 15px;
+  }
+  .table th, .table td {
+    font-size: 0.85rem;
+  }
+  button {
+    font-size: 1rem;
+  }
+  .btn-sm {
+    font-size: 0.75rem;
+  }
 }
