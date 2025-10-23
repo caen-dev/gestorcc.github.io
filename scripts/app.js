@@ -19,6 +19,18 @@ $(document).ready(function () {
       localStorage.setItem(DARK_KEY, enabled ? '1' : '0');
     });
   }
+    // Animación de transición entre modos
+  function animateThemeTransition() {
+    document.body.classList.add('theme-transition');
+    window.setTimeout(() => document.body.classList.remove('theme-transition'), 500);
+  }
+
+  toggleSwitch.addEventListener('change', function () {
+    animateThemeTransition();
+    document.body.classList.toggle('dark-mode');
+    const enabled = document.body.classList.contains('dark-mode');
+    localStorage.setItem(DARK_KEY, enabled ? '1' : '0');
+  });
 
   // === IndexedDB ===
   const request = indexedDB.open(dbName, 1);
@@ -223,3 +235,4 @@ $(document).ready(function () {
     });
   });
 });
+
