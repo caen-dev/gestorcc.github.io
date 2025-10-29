@@ -26,13 +26,19 @@
   <!-- Header fijo -->
   <header class="main-header d-flex justify-content-between align-items-center px-3 py-2">
     <div class="header-actions-left d-flex align-items-center">
+      
       <!-- NUEVO: Botón Exportar -->
-      <button id="export-btn" class="btn btn-outline-primary btn-sm mr-2" title="Exportar Información">
+      <button id="export-btn" class="btn btn-outline-primary btn-sm mr-2">
         <i class="fas fa-file-export"></i> <span class="d-none d-sm-inline">Exportar</span>
       </button>
 
+      <!-- Configuración del negocio -->
+      <button id="open-settings-btn" class="btn btn-outline-success btn-sm mr-2">
+        <i class="fas fa-cog"></i> <span class="d-none d-sm-inline">Ajustes</span>
+      </button>
+
       <!-- Botón Dashboard existente -->
-      <button id="open-dashboard-btn" class="btn btn-outline-secondary btn-sm" title="Abrir Dashboard">
+      <button id="open-dashboard-btn" class="btn btn-outline-secondary btn-sm">
         <i class="fas fa-chart-bar"></i> <span class="d-none d-sm-inline">Dashboard</span>
       </button>
     </div>
@@ -51,15 +57,12 @@
     </div>
   </header>
 
-  <!-- Panel lateral Dashboard (izquierda) -->
+  <!-- SIDEBAR DASHBOARD -->
   <aside id="dashboard-panel" aria-hidden="true">
     <div class="dashboard-header">
       <h3 class="mb-0"><i class="fas fa-tachometer-alt"></i> Panel General</h3>
-      <div class="dashboard-actions d-flex align-items-center">
-        <button id="export-csv-btn" class="btn btn-outline-success btn-sm mr-2" title="Exportar CSV (pronto)">
-          <i class="fas fa-file-csv"></i>
-        </button>
-        <button id="refresh-stats-btn" class="btn btn-light btn-sm mr-2" title="Refrescar">
+      <div class="dashboard-actions">
+        <button id="refresh-stats-btn" class="btn btn-light btn-sm" title="Refrescar">
           <i class="fas fa-sync-alt"></i>
         </button>
         <button id="close-dashboard-btn" class="btn btn-light btn-sm" title="Cerrar">
@@ -111,48 +114,28 @@
 
   <div id="dashboard-backdrop"></div>
 
-  <!-- Contenido principal -->
+  <!-- CONTENIDO -->
   <main class="container mt-4 mb-5 px-3">
-    <!-- Formulario de clientes -->
+    
+    <!-- FORM CLIENTES -->
     <form id="client-form" class="mb-4" autocomplete="off">
       <h2>Agregar Cliente</h2>
       <div class="form-group">
         <label for="client-name">Nombre:</label>
-        <input
-          type="text"
-          id="client-name"
-          class="form-control form-control-lg"
-          placeholder="Nombre"
-          required
-        />
+        <input type="text" id="client-name" class="form-control form-control-lg" placeholder="Nombre" required />
       </div>
       <div class="form-group">
         <label for="client-phone">Teléfono:</label>
-        <input
-          type="tel"
-          id="client-phone"
-          class="form-control form-control-lg"
-          placeholder="Teléfono"
-        />
+        <input type="tel" id="client-phone" class="form-control form-control-lg" placeholder="Teléfono" />
       </div>
       <div class="form-group">
         <label for="client-street">Domicilio:</label>
         <div class="form-row">
           <div class="col-8">
-            <input
-              type="text"
-              id="client-street"
-              class="form-control form-control-lg"
-              placeholder="Calle"
-            />
+            <input type="text" id="client-street" class="form-control form-control-lg" placeholder="Calle" />
           </div>
           <div class="col-4">
-            <input
-              type="text"
-              id="client-number"
-              class="form-control form-control-lg"
-              placeholder="N°"
-            />
+            <input type="text" id="client-number" class="form-control form-control-lg" placeholder="N°" />
           </div>
         </div>
       </div>
@@ -161,17 +144,13 @@
       </button>
     </form>
 
-    <!-- Formulario de transacciones -->
+    <!-- FORM MOVIMIENTOS -->
     <form id="account-form" class="mb-4" autocomplete="off">
       <h2>Registrar Transacción</h2>
 
+      <input type="text" id="client-filter" class="form-control mb-3 form-control-lg" placeholder="Filtrar Clientes" />
+
       <div class="form-group">
-        <input
-          type="text"
-          id="client-filter"
-          class="form-control mb-3 form-control-lg"
-          placeholder="Filtrar Clientes"
-        />
         <label for="select-client">Seleccionar Cliente</label>
         <select id="select-client" class="form-control form-control-lg" required></select>
       </div>
@@ -187,12 +166,10 @@
       <div class="form-group">
         <label for="amount">Monto</label>
         <input
-          type="text"
-          inputmode="decimal"
+          type="text" inputmode="decimal"
           id="amount"
           class="form-control form-control-lg"
-          placeholder="Monto (ej: 1.234,56)"
-          required
+          placeholder="Monto (ej: 1.234,56)" required
         />
       </div>
 
@@ -210,23 +187,13 @@
       </button>
     </form>
 
-    <!-- Tabla de deudas -->
     <section>
       <h2>Resumen de Deudas</h2>
-      <input
-        type="text"
-        id="debt-search"
-        class="form-control form-control-lg mb-4"
-        placeholder="Buscar Deudas"
-      />
+      <input type="text" id="debt-search" class="form-control form-control-lg mb-4" placeholder="Buscar Deudas" />
       <div class="table-responsive">
         <table id="debt-list" class="table table-bordered table-striped">
           <thead class="thead-dark">
-            <tr>
-              <th>Cliente</th>
-              <th>Transacciones</th>
-              <th>Saldo</th>
-            </tr>
+            <tr><th>Cliente</th><th>Transacciones</th><th>Saldo</th></tr>
           </thead>
           <tbody></tbody>
         </table>
@@ -238,10 +205,47 @@
     <p>&copy; 2024 - Cuentas+ | Tu negocio en orden, siempre.</p>
   </footer>
 
-  <!-- Terceros (orden correcto) -->
+  <!-- ================================================= -->
+  <!-- 📌 MODAL AJUSTES DEL NEGOCIO -->
+  <!-- ================================================= -->
+  <div class="modal fade" id="businessSettingsModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Ajustes del Negocio</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <label>Nombre del Comercio</label>
+          <input type="text" id="business-name" class="form-control mb-3" placeholder="Ej: Almacén Los Amigos" />
+
+          <label>Teléfono / WhatsApp</label>
+          <input type="text" id="business-phone" class="form-control mb-3" placeholder="Ej: 2983-555555" />
+
+          <label>Domicilio</label>
+          <input type="text" id="business-address" class="form-control" placeholder="Ej: Calle 123" />
+        </div>
+
+        <div class="modal-footer">
+          <button id="save-business-settings" class="btn btn-primary">Guardar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts externos -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- ✅ Scripts PDF -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.29/dist/jspdf.plugin.autotable.min.js"></script>
 
   <!-- App -->
   <script src="scripts/uiAlerts.js"></script>
