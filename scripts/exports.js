@@ -1,12 +1,12 @@
 'use strict';
 
 import { clients } from './state.js';
-import { money, todayStr } from './utils.js';
+import { money, todayStr, formatDateForPDF } from './utils.js';
+import { loadBusinessInfo } from './settings.js';
 import * as uiAlerts from './uiAlerts.js';
 
 export function initExportWizard() {
   $('#export-btn').on('click', async () => {
-
     const result = await Swal.fire({
       title: 'Exportar Información',
       text: 'Elegí el formato que deseás generar',
@@ -21,17 +21,19 @@ export function initExportWizard() {
 
     if (result.isConfirmed) return exportCSV();
     if (result.isDenied) return exportPDF();
-    // cancelado → no hacemos nada
   });
 }
 
+// =================================================================
+// ✅ EXPORTACIÓN CSV
+// =================================================================
 function exportCSV() {
-  const rows = Object.values(clients);
-  if (rows.length === 0) return uiAlerts.warning('Sin datos', 'No hay clientes para exportar.');
+  const list = Object.values(clients);
+  if (!list.length) return uiAlerts.warning('Sin datos', 'No hay clientes para exportar.');
 
   let csv = "Cliente;Deuda;Último Movimiento;Teléfono\n";
 
-  rows.forEach(c => {
+  list.forEach(c => {
     const last = c.transactions?.length
       ? c.transactions[c.transactions.length - 1].date
       : '—';
@@ -51,16 +53,92 @@ function exportCSV() {
   uiAlerts.toast('Archivo CSV exportado correctamente ✅');
 }
 
-// Placeholder para el próximo commit
-function exportPDF() {
-  uiAlerts.info('Exportar PDF', 'Disponible en el próximo update 📄');
-}
-
-// evitar inyección en CSV
+// Evitar inyección o caracteres conflictivos
 function sanitize(str) {
-  if (str === null || str === undefined) return '';
+  if (!str) return '';
   const s = String(str);
-  // Evita fórmulas en Excel/Sheets y caracteres problemáticos
   if (/^[=+\-@]/.test(s)) return "'" + s;
   return s.replace(/\r?\n/g, ' ').trim();
+}
+
+// =================================================================
+// ✅ EXPORTACIÓN PDF COMERCIAL
+// =================================================================
+async function exportPDF() {
+  if (!Object.keys(clients).length)
+    return uiAlerts.warning('Sin datos', 'No hay información para exportar.');
+
+  const { jsPDF } = window.jspdf;
+
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+  const marginX = 15;
+  let cursorY = 15;
+
+  // Datos del negocio
+  const business = loadBusinessInfo();
+  if (business.name) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text(business.name, marginX, cursorY);
+    cursorY += 7;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    if (business.phone) {
+      doc.text(`Tel: ${business.phone}`, marginX, cursorY);
+      cursorY += 5;
+    }
+    if (business.address) {
+      doc.text(business.address, marginX, cursorY);
+      cursorY += 5;
+    }
+    cursorY += 5;
+  }
+
+  // Branding Cuentas+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("Cuentas+", marginX, cursorY);
+  cursorY += 6;
+
+  // Fecha del reporte
+  doc.setFontSize(10);
+  doc.text(`Fecha: ${formatDateForPDF(new Date())}`, marginX, cursorY);
+  cursorY += 10;
+
+  // Tabla principal
+  const tableData = Object.values(clients).map(c => {
+    const last = c.transactions?.length
+      ? c.transactions[c.transactions.length - 1].date
+      : '—';
+    return [
+      c.name,
+      money(c.balance),
+      last,
+      c.phone || '-'
+    ];
+  });
+
+  doc.autoTable({
+    startY: cursorY,
+    head: [['Cliente', 'Saldo', 'Último Mov.', 'Teléfono']],
+    body: tableData,
+    theme: 'grid',
+    headStyles: { fillColor: [13, 110, 253] },
+    styles: { fontSize: 9 }
+  });
+
+  // Footer comercial
+  const pageH = doc.internal.pageSize.getHeight();
+  doc.setFontSize(9);
+  doc.setTextColor(100);
+  doc.text(
+    "Documento generado con Cuentas+ — Tu negocio en orden, siempre.",
+    marginX,
+    pageH - 10
+  );
+
+  doc.save(`cuentasplus_${todayStr()}.pdf`);
+  uiAlerts.toast('PDF generado correctamente 📄');
 }
