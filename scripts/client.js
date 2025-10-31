@@ -1,8 +1,11 @@
+'use strict';
+
 import { clients } from './state.js';
 import { saveClient, deleteClientByName } from './db.js';
 import { updateClientSelect, updateClientDebtList } from './ui.js';
 import { updateStats } from './dashboard.js';
 import { isEmpty } from './utils.js';
+import * as uiAlerts from './uiAlerts.js';  // ⬅️ agregado
 
 export function initClients() {
   // Alta de cliente
@@ -79,4 +82,4 @@ export function initClients() {
       uiAlerts.toast('Cliente actualizado correctamente ✏️');
     });
   });
-}
+                 }
