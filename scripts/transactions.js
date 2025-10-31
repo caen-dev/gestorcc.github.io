@@ -1,8 +1,11 @@
+'use strict';
+
 import { clients } from './state.js';
 import { saveClient } from './db.js';
 import { updateClientDebtList, updateClientSelect } from './ui.js';
 import { updateStats } from './dashboard.js';
 import { todayStr, isEmpty, formatMoneyLive, parseMoneyToNumber } from './utils.js';
+import * as uiAlerts from './uiAlerts.js'; // ⬅️ agregado
 
 export function initTransactions() {
   const $amount = $('#amount');
@@ -61,4 +64,4 @@ function handleTransaction(clientName, type, amount, paymentMethod) {
   updateClientDebtList();
   updateStats();
   uiAlerts.toast('Transacción registrada correctamente 💰');
-}
+    }
