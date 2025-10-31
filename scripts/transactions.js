@@ -64,4 +64,4 @@ function handleTransaction(clientName, type, amount, paymentMethod) {
   updateClientDebtList();
   updateStats();
   uiAlerts.toast('Transacción registrada correctamente 💰');
-    }
+      }
