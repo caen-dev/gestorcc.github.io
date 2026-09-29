@@ -1,0 +1,8 @@
+{
+  "name": "cuentas-plus",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

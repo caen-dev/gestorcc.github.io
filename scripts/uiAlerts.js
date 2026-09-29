@@ -2,14 +2,23 @@
 
 // uiAlerts.js — híbrido: exporta como ESM y también adjunta window.uiAlerts
 
-const DEFAULT_CONFIRM_COLOR = '#0d6efd';
-
 function isDarkMode() {
   return document.body.classList.contains('dark-mode');
 }
 
+export function getThemeColors() {
+  const styles = getComputedStyle(document.documentElement);
+  const read = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
+  return {
+    accent: read('--accent', '#16766d'),
+    surface: read('--modal-bg', '#ffffff'),
+    text: read('--modal-text', '#24343a'),
+    muted: read('--muted', '#5d6d70')
+  };
+}
+
 function fire({ icon = 'info', title = '', text = '', showConfirmButton = true }) {
-  const dark = isDarkMode();
+  const palette = getThemeColors();
   const hasSwal = typeof window.Swal === 'function';
 
   const config = {
@@ -17,11 +26,11 @@ function fire({ icon = 'info', title = '', text = '', showConfirmButton = true }
     title,
     text,
     showConfirmButton,
-    confirmButtonColor: DEFAULT_CONFIRM_COLOR,
-    background: dark ? '#1e2124' : '#ffffff',
-    color: dark ? '#f8f9fa' : '#212529',
-    backdrop: dark ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.3)',
-    customClass: { popup: dark ? 'swal2-dark' : 'swal2-light', title: 'swal-title', htmlContainer: 'swal-text' }
+    confirmButtonColor: palette.accent,
+    background: palette.surface,
+    color: palette.text,
+    backdrop: isDarkMode() ? 'rgba(0,0,0,0.75)' : 'rgba(25,52,59,0.32)',
+    customClass: { popup: isDarkMode() ? 'swal2-dark' : 'swal2-light', title: 'swal-title', htmlContainer: 'swal-text' }
   };
 
   if (hasSwal) return window.Swal.fire(config);
@@ -35,7 +44,7 @@ function warning(t, x = '') { return fire({ icon: 'warning', title: t, text: x }
 function info(t, x = '')    { return fire({ icon: 'info',    title: t, text: x }); }
 
 function toast(msg, icon = 'success') {
-  const dark = isDarkMode();
+  const palette = getThemeColors();
   const hasSwal = typeof window.Swal === 'function';
   if (hasSwal) {
     return window.Swal.fire({
@@ -43,8 +52,8 @@ function toast(msg, icon = 'success') {
       position: 'top-end',
       icon,
       title: msg,
-      background: dark ? '#1e2124' : '#ffffff',
-      color: dark ? '#f8f9fa' : '#212529',
+      background: palette.surface,
+      color: palette.text,
       showConfirmButton: false,
       timer: 2200,
       timerProgressBar: true
@@ -55,7 +64,7 @@ function toast(msg, icon = 'success') {
 }
 
 async function confirm(t, x = '¿Deseás continuar?') {
-  const dark = isDarkMode();
+  const palette = getThemeColors();
   const hasSwal = typeof window.Swal === 'function';
   if (hasSwal) {
     const res = await window.Swal.fire({
@@ -63,10 +72,11 @@ async function confirm(t, x = '¿Deseás continuar?') {
       title: t,
       text: x,
       showCancelButton: true,
-      confirmButtonColor: DEFAULT_CONFIRM_COLOR,
-      cancelButtonColor: dark ? '#6c757d' : '#adb5bd',
-      background: dark ? '#1e2124' : '#ffffff',
-      color: dark ? '#f8f9fa' : '#212529',
+      confirmButtonColor: palette.accent,
+      cancelButtonColor: palette.muted,
+      background: palette.surface,
+      color: palette.text,
+      customClass: { popup: isDarkMode() ? 'swal2-dark' : 'swal2-light' },
       confirmButtonText: 'Sí',
       cancelButtonText: 'Cancelar',
       reverseButtons: true
