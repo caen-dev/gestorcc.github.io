@@ -182,10 +182,8 @@ section h2 { margin-top: 0; }
   top: calc(100% + 8px);
   left: clamp(14px, 3vw, 36px);
   z-index: 1001;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: max-content;
+  display: block;
+  width: 248px;
   max-width: calc(100vw - 28px);
   padding: 12px;
   color: var(--text);
@@ -195,32 +193,34 @@ section h2 { margin-top: 0; }
   box-shadow: 0 12px 32px var(--shadow-strong);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
+  transform: translateX(-10px);
   transform-origin: top left;
   transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
 }
 .header-tools-panel.is-open {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateX(0);
   transition: opacity .18s ease, transform .18s ease, visibility 0s;
 }
-.header-actions-left {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  flex: 0 0 auto;
+.header-tools-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
+.header-tools-list li { min-width: 0; }
 .theme-switch-container {
   flex: 0 0 auto;
   min-width: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 8px;
-  padding-left: 14px;
-  border-left: 1px solid var(--border);
+  margin-top: 10px;
+  padding: 10px 2px 0;
+  border-top: 1px solid var(--border);
 }
 .theme-switch-label {
   color: var(--muted);
@@ -411,7 +411,12 @@ button[type="submit"], .btn {
 button[type="submit"]:hover, .btn:hover {
   background: var(--accent-strong);
 }
-.header-actions-left .btn {
+.header-tools-list .btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
   min-height: 44px;
   padding: 7px 10px;
   display: inline-flex;
@@ -425,7 +430,7 @@ button[type="submit"]:hover, .btn:hover {
   font-size: .78rem;
   font-weight: 650;
 }
-.header-actions-left .btn:hover {
+.header-tools-list .btn:hover {
   color: var(--accent-strong);
   background: var(--table-row-hover);
   border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
@@ -457,6 +462,7 @@ button[type="submit"]:hover, .btn:hover {
   color: var(--text);
   scroll-margin-top: 92px;
 }
+.overview-section[hidden] { display: none; }
 .overview-heading {
   display: flex;
   min-height: 44px;
@@ -530,6 +536,16 @@ button[type="submit"]:hover, .btn:hover {
   font-variant-numeric: tabular-nums;
 }
 .overview-hint { margin: 8px 0 0; color: var(--muted); font-size: .78rem; }
+.overview-close {
+  margin-top: 8px;
+  padding: 5px 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: .82rem;
+  text-decoration: underline;
+}
 
 /* =========================================================
    TABLA DE DEUDAS (contraste corregido)
@@ -560,13 +576,21 @@ button[type="submit"]:hover, .btn:hover {
   padding: 12px 16px;
   border-color: var(--border);
 }
-.table-responsive { border-radius: 8px; }
+.table-responsive {
+  border-radius: 8px;
+}
+.directory-section .table-responsive {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
 .directory-section {
   margin-top: 24px;
   padding: 20px;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
+  overflow: hidden;
 }
 .directory-heading {
   display: grid;
@@ -609,11 +633,28 @@ button[type="submit"]:hover, .btn:hover {
 .directory-filters select { width: min(220px, 50%); }
 #client-list-count { margin: 0 0 10px; }
 .directory-section .table { border: 1px solid var(--border); }
-.directory-section .table thead th:nth-child(2),
-.directory-section .table thead th:nth-child(3) { text-align: right; }
-.directory-section .table tbody td:nth-child(2),
-.directory-section .table tbody td:nth-child(3) { text-align: right; }
-.directory-section .table tbody td:first-child strong { font-weight: 650; }
+.directory-section .table thead th:nth-child(4),
+.directory-section .table tbody td:nth-child(4) { text-align: right; }
+.directory-section .table thead th:last-child { width: 112px; }
+.client-name-cell { min-width: 150px; font-weight: 650; }
+.client-contact,
+.client-movement {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 132px;
+  line-height: 1.35;
+}
+.client-contact span:last-child,
+.client-movement span {
+  color: var(--muted);
+  font-size: .78rem;
+}
+.client-movement strong { font-size: .86rem; font-weight: 600; }
+.client-balance { min-width: 120px; font-variant-numeric: tabular-nums; font-weight: 700; }
+.client-balance.has-debt { color: var(--danger); }
+.client-actions { text-align: right; }
+.client-actions .btn-container { margin-left: 0; }
 .client-history {
   margin-top: 14px;
   padding-top: 12px;
@@ -807,23 +848,6 @@ a:focus-visible {
     width: min(360px, calc(100vw - 24px));
     max-width: none;
   }
-  .header-actions-left {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-  }
-  .header-actions-left .btn {
-    justify-content: flex-start;
-    padding: 7px 10px;
-  }
-  .header-actions-left .btn span { display: inline; }
-  .theme-switch-container {
-    justify-content: space-between;
-    margin-top: 10px;
-    padding: 10px 2px 0;
-    border-top: 1px solid var(--border);
-    border-left: 0;
-  }
   .directory-heading {
     grid-template-columns: 1fr;
     align-items: start;
@@ -832,6 +856,7 @@ a:focus-visible {
   .directory-section { padding: 18px; }
   .directory-filters { justify-content: flex-start; }
   .directory-filters select { flex: 1 1 0; width: auto; }
+  .directory-section .table { min-width: 720px; }
 }
 @media (max-width: 576px) {
   .main-header { padding: 8px 14px; }

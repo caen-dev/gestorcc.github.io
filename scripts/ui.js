@@ -32,13 +32,15 @@ export function updateClientDebtList() {
     const emptyMessage = Object.keys(clients).length
       ? 'No hay clientes que coincidan con la búsqueda y el filtro.'
       : 'Todavía no hay clientes. Agregá uno para comenzar.';
-    $tbody.append($('<tr>').append($('<td colspan="3">').addClass('text-muted text-center').text(emptyMessage)));
+    $tbody.append($('<tr>').append($('<td colspan="5">').addClass('text-muted text-center').text(emptyMessage)));
     return;
   }
 
   orderedClients.forEach((c, index) => {
     const transactions = c.transactions || [];
     const infoId = `client-info-${index}`;
+    const latestTransaction = getLatestTransaction(transactions);
+
     const $btns = $('<div>')
       .addClass('btn-container')
       .append(
@@ -60,10 +62,26 @@ export function updateClientDebtList() {
           .data('client', c.name)
       );
 
+    const address = [c.street, c.number].filter((part) => part && part !== '-').join(' ');
+    const $contact = $('<div>').addClass('client-contact')
+      .append($('<span>').text(c.phone || 'Sin teléfono'));
+    if (address) $contact.append($('<span>').text(address));
+
+    const movementLabel = `${transactions.length} ${transactions.length === 1 ? 'movimiento' : 'movimientos'}`;
+    const $movement = $('<div>').addClass('client-movement')
+      .append($('<strong>').text(movementLabel));
+    $movement.append($('<span>').text(latestTransaction ? `Último: ${latestTransaction.date}` : 'Sin actividad'));
+
+    const balance = Number(c.balance) || 0;
+    const $balance = $('<td>').addClass(balance > 0 ? 'client-balance has-debt' : 'client-balance')
+      .text(money(balance));
+
     const $row = $('<tr>').append(
-      $('<td>').append($('<strong>').text(c.name), $btns),
-      $('<td>').text(`${transactions.length} ${transactions.length === 1 ? 'movimiento' : 'movimientos'}`),
-      $('<td>').text(money(c.balance))
+      $('<td>').addClass('client-name-cell').append($('<strong>').text(c.name)),
+      $('<td>').append($contact),
+      $('<td>').append($movement),
+      $balance,
+      $('<td>').addClass('client-actions').append($btns)
     );
 
     const $personalInfo = $('<div>').addClass('client-info-grid').append(
@@ -81,7 +99,7 @@ export function updateClientDebtList() {
       $historyContent
     );
     const $infoRow = $('<tr>').addClass('personal-info-row').attr({ id: infoId, 'aria-hidden': 'true' }).hide()
-      .append($('<td colspan="3">').append($personalInfo, $history));
+      .append($('<td colspan="5">').append($personalInfo, $history));
 
     $tbody.append($row, $infoRow);
   });
@@ -196,9 +214,7 @@ export function filterClients(clientList, search = '', filter = 'all') {
 export function sortClients(clientList, sort = 'activity') {
   const clientsWithActivity = clientList.map((client) => ({
     client,
-    latestActivity: (client.transactions || []).reduce((latest, transaction) => (
-      Math.max(latest, parseLocalDate(transaction.date)?.getTime() || 0)
-    ), 0)
+    latestActivity: parseLocalDate(getLatestTransaction(client.transactions || [])?.date)?.getTime() || 0
   }));
 
   clientsWithActivity.sort((a, b) => {
@@ -214,6 +230,13 @@ export function sortClients(clientList, sort = 'activity') {
   });
 
   return clientsWithActivity.map(({ client }) => client);
+}
+
+export function getLatestTransaction(transactions) {
+  return transactions.reduce((latest, transaction) => {
+    const date = parseLocalDate(transaction.date);
+    return date && (!latest || date > latest.date) ? { transaction, date } : latest;
+  }, null)?.transaction;
 }
 
 export function initTableInteractions() {

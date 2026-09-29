@@ -19,7 +19,7 @@
   />
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="css/styles.css?v=20260928-11" />
+  <link rel="stylesheet" href="css/styles.css?v=20260928-15" />
 </head>
 
 <body>
@@ -44,23 +44,30 @@
       </a>
     </h1>
 
-    <div id="header-tools-panel" class="header-tools-panel" aria-label="Herramientas" aria-hidden="true" inert>
-      <nav class="header-actions-left" aria-label="Acciones">
-        <button id="export-btn" class="btn btn-header-action" aria-label="Exportar información">
-          <i class="fas fa-file-export" aria-hidden="true"></i> <span>Exportar</span>
-        </button>
-
-        <button id="backup-btn" class="btn btn-header-action" aria-label="Copias de seguridad">
-          <i class="fas fa-database" aria-hidden="true"></i> <span>Respaldo</span>
-        </button>
-
-        <button id="open-settings-btn" class="btn btn-header-action" aria-label="Ajustes del negocio">
-          <i class="fas fa-cog" aria-hidden="true"></i> <span>Ajustes</span>
-        </button>
-
-        <a id="open-dashboard-btn" class="btn btn-header-action" href="#business-overview" aria-label="Ir al resumen de cuentas">
-          <i class="fas fa-chart-bar" aria-hidden="true"></i> <span>Resumen</span>
-        </a>
+    <div id="header-tools-panel" class="header-tools-panel" role="group" aria-label="Herramientas" aria-hidden="true" inert>
+      <nav aria-label="Acciones">
+        <ul class="header-tools-list">
+          <li>
+            <button id="export-btn" class="btn btn-header-action" aria-label="Exportar información">
+              <i class="fas fa-file-export" aria-hidden="true"></i> <span>Exportar</span>
+            </button>
+          </li>
+          <li>
+            <button id="backup-btn" class="btn btn-header-action" aria-label="Copias de seguridad">
+              <i class="fas fa-database" aria-hidden="true"></i> <span>Respaldo</span>
+            </button>
+          </li>
+          <li>
+            <button id="open-settings-btn" class="btn btn-header-action" aria-label="Ajustes del negocio">
+              <i class="fas fa-cog" aria-hidden="true"></i> <span>Ajustes</span>
+            </button>
+          </li>
+          <li>
+            <button id="open-dashboard-btn" class="btn btn-header-action" type="button" aria-controls="business-overview" aria-expanded="false" aria-label="Mostrar resumen de cuentas">
+              <i class="fas fa-chart-bar" aria-hidden="true"></i> <span>Resumen</span>
+            </button>
+          </li>
+        </ul>
       </nav>
 
       <div class="theme-switch-container">
@@ -184,7 +191,7 @@
     </form>
     </div>
 
-    <section id="business-overview" class="overview-section" tabindex="-1" aria-labelledby="overview-title">
+    <section id="business-overview" class="overview-section" tabindex="-1" aria-labelledby="overview-title" hidden>
       <div class="overview-heading">
         <h2 id="overview-title">Resumen de cuentas</h2>
         <button id="refresh-stats-btn" class="btn btn-light btn-sm" type="button" aria-label="Actualizar estadísticas" title="Actualizar">
@@ -221,6 +228,7 @@
         </button>
       </div>
       <p class="overview-hint" id="overview-hint">Seleccioná un indicador para consultar su detalle.</p>
+      <button id="close-overview-btn" class="overview-close" type="button">Cerrar resumen</button>
     </section>
 
     <section class="directory-section" aria-labelledby="directory-title">
@@ -253,9 +261,15 @@
       <p id="client-list-count" class="small text-muted" aria-live="polite"></p>
       <div class="table-responsive">
         <table id="debt-list" class="table table-bordered table-striped">
-          <caption class="sr-only">Directorio de clientes, saldo actual y movimientos más recientes</caption>
+          <caption class="sr-only">Directorio con cliente, contacto, cantidad y fecha del último movimiento, saldo y acciones</caption>
           <thead class="thead-dark">
-            <tr><th scope="col">Cliente</th><th scope="col">Movimientos</th><th scope="col">Saldo</th></tr>
+            <tr>
+              <th scope="col">Cliente</th>
+              <th scope="col">Contacto</th>
+              <th scope="col">Movimientos</th>
+              <th scope="col">Saldo</th>
+              <th scope="col"><span class="sr-only">Acciones</span></th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>
@@ -311,6 +325,6 @@
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.29/dist/jspdf.plugin.autotable.min.js"></script>
 
   <!-- App (módulo) -->
-  <script type="module" src="scripts/app.js?v=20260928-11"></script>
+  <script type="module" src="scripts/app.js?v=20260928-16"></script>
 </body>
           </html>

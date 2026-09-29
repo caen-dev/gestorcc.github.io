@@ -5,16 +5,13 @@ import { clients } from './state.js?v=20260928-8';
 import { initTheme } from './utils.js?v=20260928-8';
 import { initClients } from './client.js?v=20260928-8';
 import { initTransactions } from './transactions.js?v=20260928-8';
-import { updateClientSelect, updateClientDebtList, initTableInteractions } from './ui.js?v=20260928-8';
-import { initDashboard, updateStats } from './dashboard.js?v=20260928-10';
+import { updateClientSelect, updateClientDebtList, initTableInteractions } from './ui.js?v=20260928-15';
+import { initDashboard, updateStats } from './dashboard.js?v=20260928-15';
 import { initExportWizard } from './exports.js?v=20260928-8';
 import { initBusinessSettings } from './settings.js?v=20260928-8';
 import * as uiAlerts from './uiAlerts.js?v=20260928-8';
 
 export async function startApp() {
-
-  // Herramientas del encabezado
-  initHeaderTools();
 
   // 1) Tema (persistente)
   initTheme();
@@ -78,9 +75,11 @@ export async function startApp() {
   initTableInteractions();
 }
 
+initHeaderTools();
 $(startApp);
 
 function initHeaderTools() {
+  if (typeof document === 'undefined') return;
   const toggle = document.getElementById('header-tools-toggle');
   const panel = document.getElementById('header-tools-panel');
   if (!toggle || !panel) return;
@@ -100,15 +99,40 @@ function initHeaderTools() {
   toggle.addEventListener('click', () => {
     const open = toggle.getAttribute('aria-expanded') !== 'true';
     setOpen(open);
-    if (open) {
-      window.requestAnimationFrame(() => panel.querySelector('button, a, input')?.focus());
-    }
+    if (open) panel.querySelector('button, a, input')?.focus();
   });
 
   panel.addEventListener('click', (event) => {
-    if (event.target.closest('a, button')) {
+    const action = event.target.closest('a, button');
+    if (action?.id === 'open-dashboard-btn') {
       window.setTimeout(() => setOpen(false), 0);
+    } else if (action) {
+      window.setTimeout(() => setOpen(false, panel.contains(document.activeElement)), 0);
     }
+  });
+
+  const summaryButton = document.getElementById('open-dashboard-btn');
+  const overview = document.getElementById('business-overview');
+  summaryButton?.addEventListener('click', () => {
+    if (!overview || !summaryButton) return;
+    const showing = overview.hidden;
+    overview.hidden = !showing;
+    summaryButton.setAttribute('aria-expanded', String(showing));
+    summaryButton.setAttribute('aria-label', showing ? 'Ocultar resumen de cuentas' : 'Mostrar resumen de cuentas');
+    if (showing) {
+      overview.focus();
+      overview.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    } else {
+      toggle.focus();
+    }
+  });
+
+  document.getElementById('close-overview-btn')?.addEventListener('click', () => {
+    if (!overview || !summaryButton) return;
+    overview.hidden = true;
+    summaryButton.setAttribute('aria-expanded', 'false');
+    summaryButton.setAttribute('aria-label', 'Mostrar resumen de cuentas');
+    toggle.focus();
   });
 
   document.addEventListener('click', (event) => {

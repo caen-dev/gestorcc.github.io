@@ -6,8 +6,8 @@ import { loadBusinessInfo, saveBusinessInfo } from './settings.js?v=20260928-8';
 import { replaceAllClients } from './db.js?v=20260928-8';
 import { validateBackup } from './backup.js?v=20260928-8';
 import { buildClientSummaryRows, buildTransactionRows, serializeCSV } from './report.js?v=20260928-8';
-import { updateClientSelect, updateClientDebtList } from './ui.js?v=20260928-8';
-import { updateStats } from './dashboard.js?v=20260928-10';
+import { updateClientSelect, updateClientDebtList } from './ui.js?v=20260928-15';
+import { updateStats } from './dashboard.js?v=20260928-15';
 import * as uiAlerts from './uiAlerts.js?v=20260928-8';
 
 export function initExportWizard() {

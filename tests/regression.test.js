@@ -61,7 +61,7 @@ globalThis.indexedDB = {
 const { initDB, loadAllClients, replaceAllClients, saveClient } = await import('../scripts/db.js');
 const { validateBackup } = await import('../scripts/backup.js');
 const { buildClientSummaryRows, buildTransactionRows, serializeCSV } = await import('../scripts/report.js');
-const { filterClients, searchClients, sortClients } = await import('../scripts/ui.js');
+const { filterClients, getLatestTransaction, searchClients, sortClients } = await import('../scripts/ui.js');
 const { filterTransactions, transactionTypeLabel } = await import('../scripts/history.js');
 const { formatMoneyLive, normalizeSearchText, parseLocalDate, parseMoneyToNumber } = await import('../scripts/utils.js');
 const { startApp } = await import('../scripts/app.js');
@@ -237,6 +237,17 @@ test('directory sorting uses transaction dates and supports debt and name order'
   assert.deepEqual(sortClients(directory).map((client) => client.name), ['Bruno', 'Ana', 'Carlos']);
   assert.deepEqual(sortClients(directory, 'balance').map((client) => client.name), ['Ana', 'Bruno', 'Carlos']);
   assert.deepEqual(sortClients(directory, 'name').map((client) => client.name), ['Ana', 'Bruno', 'Carlos']);
+});
+
+test('directory latest transaction uses the newest valid date regardless of array order', () => {
+  const transactions = [
+    { date: '02/09/2026', amount: 20 },
+    { date: '20/09/2026', amount: 50 },
+    { date: '31/02/2026', amount: 100 }
+  ];
+
+  assert.equal(getLatestTransaction(transactions).amount, 50);
+  assert.equal(getLatestTransaction([]), undefined);
 });
 
 test('transaction history filters by month and purchase/payment type, newest first', () => {
