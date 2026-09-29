@@ -10,10 +10,10 @@ export function getThemeColors() {
   const styles = getComputedStyle(document.documentElement);
   const read = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
   return {
-    accent: read('--accent', '#117c78'),
+    accent: read('--accent', '#16766d'),
     surface: read('--modal-bg', '#ffffff'),
-    text: read('--modal-text', '#1b2b40'),
-    muted: read('--muted', '#66778b')
+    text: read('--modal-text', '#24343a'),
+    muted: read('--muted', '#5d6d70')
   };
 }
 
@@ -29,7 +29,7 @@ function fire({ icon = 'info', title = '', text = '', showConfirmButton = true }
     confirmButtonColor: palette.accent,
     background: palette.surface,
     color: palette.text,
-    backdrop: isDarkMode() ? 'rgba(0,0,0,0.75)' : 'rgba(19,39,62,0.32)',
+    backdrop: isDarkMode() ? 'rgba(0,0,0,0.75)' : 'rgba(25,52,59,0.32)',
     customClass: { popup: isDarkMode() ? 'swal2-dark' : 'swal2-light', title: 'swal-title', htmlContainer: 'swal-text' }
   };
 

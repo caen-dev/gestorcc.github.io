@@ -2,9 +2,9 @@
 
 import { clients } from './state.js?v=20260928-8';
 import { saveClient } from './db.js?v=20260928-8';
-import { updateClientSelect, updateClientDebtList } from './ui.js?v=20260928-16';
+import { updateClientSelect, updateClientDebtList } from './ui.js?v=20260928-18';
 import { updateStats } from './dashboard.js?v=20260928-15';
-import * as uiAlerts from './uiAlerts.js?v=20260928-8';
+import * as uiAlerts from './uiAlerts.js?v=20260928-18';
 
 export function initClients() {
   let editingClientName = null;

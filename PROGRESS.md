@@ -30,11 +30,12 @@ El porcentaje es una estimación, no una certificación de producto terminado. P
 - La confirmación de restauración muestra comercio, fecha de exportación y cantidad de clientes/movimientos antes de reemplazar datos.
 - El historial de cada cliente se consulta incluso si ya saldó la deuda, con filtro por mes/tipo, orden cronológico descendente, tabla desplazable en móvil y contenido generado como texto para evitar interpretar datos del cliente como HTML.
 - El directorio permite ordenar por actividad real más reciente, saldo más alto o nombre; el cálculo usa la fecha del movimiento más reciente, aunque los registros históricos no estén guardados cronológicamente.
-- Se simplificó la presentación a una paleta azul/gris discreta, paneles planos y encabezados directos; los formularios aparecen primero, las cuatro métricas compactas quedan debajo y el directorio sigue a continuación.
+- Se simplificó la presentación a paneles discretos; los formularios aparecen primero, las cuatro métricas compactas quedan debajo y el directorio sigue a continuación.
 - El encabezado concentra la marca Cuentas+ y un botón de herramientas a la izquierda; exportar, respaldo, ajustes, resumen y tema aparecen en un panel desplegable animado, operable por teclado y cerrable con Escape o al pulsar fuera.
 - El resumen de cuentas queda oculto al iniciar y solo se muestra desde la herramienta **Resumen**, con cierre explícito y métricas conservadas.
-- El directorio presenta cliente y contacto juntos, seguidos por movimientos (cantidad y fecha de la última actividad), saldo y acciones; conserva los controles de información y edición por cliente. Se validan fechas reales al determinar el último movimiento, y el detalle expandido ocupa correctamente todas las columnas.
+- El directorio presenta tres columnas: cliente (contacto y botones de información/edición junto al nombre), movimientos (cantidad y fecha de la última actividad) y saldo. Se validan fechas reales al determinar el último movimiento, y el detalle expandido ocupa las tres columnas.
 - La guía inicial aparece solo cuando no hay clientes guardados y se oculta al crear el primero; los títulos de las tarjetas y los botones de acción tienen jerarquía tipográfica clara y adaptable.
+- La paleta completa se actualizó a verde petróleo, marfil y detalles dorados con equivalentes de alto contraste para tema oscuro; marca, tablas, formularios, estados, botones e interacciones comparten los mismos tokens visuales.
 - En pantallas estrechas la tabla conserva columnas legibles con desplazamiento horizontal dentro de su propio contenedor, sin ensanchar la página.
 - Se integró el buscador del directorio en el encabezado de la sección, junto al título en escritorio y debajo del título en móvil; los filtros de saldo y orden quedan agrupados y alineados aparte.
 - La capa visual mantiene foco visible, controles táctiles de 44 px, tema oscuro y soporte de movimiento reducido sin animaciones decorativas persistentes.
@@ -45,7 +46,8 @@ El porcentaje es una estimación, no una certificación de producto terminado. P
 ## Validaciones de esta etapa
 
 - El usuario confirma que el buscador y el historial actualizados funcionan correctamente en navegador y móvil.
-- El rediseño y sus hojas de estilo están disponibles en la vista previa de esta worktree; queda pendiente la inspección visual final de ambos temas en tamaños de escritorio y móvil.
+- En la vista previa del worktree se verificaron los tres encabezados del directorio, las acciones en la celda del cliente, el detalle expandido con `colspan` de tres columnas, la paleta clara/oscura y el menú de herramientas con contraste legible. A 580 px, la tabla se desplaza en su propio contenedor sin desbordar la página.
+- `git diff --check` pasa con la configuración CRLF de Windows. La suite `npm test` no está disponible en este entorno porque Node.js/npm no están instalados.
 - Cambios de auditoría: falta completar la verificación dinámica de apertura/cierre del modal de ajustes, foco/inert y tarjetas del resumen en ambos temas.
 
 - En Microsoft Edge, alta de cliente, compra, recarga con datos conservados y edición/renombrado con saldo y movimientos preservados; cancelar edición restaura el formulario sin modificar el cliente.

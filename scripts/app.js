@@ -5,11 +5,11 @@ import { clients } from './state.js?v=20260928-8';
 import { initTheme } from './utils.js?v=20260928-8';
 import { initClients } from './client.js?v=20260928-8';
 import { initTransactions } from './transactions.js?v=20260928-8';
-import { updateClientSelect, updateClientDebtList, initTableInteractions } from './ui.js?v=20260928-16';
+import { updateClientSelect, updateClientDebtList, initTableInteractions } from './ui.js?v=20260928-18';
 import { initDashboard, updateStats } from './dashboard.js?v=20260928-15';
 import { initExportWizard } from './exports.js?v=20260928-8';
 import { initBusinessSettings } from './settings.js?v=20260928-8';
-import * as uiAlerts from './uiAlerts.js?v=20260928-8';
+import * as uiAlerts from './uiAlerts.js?v=20260928-18';
 
 export async function startApp() {
 

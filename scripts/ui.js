@@ -33,7 +33,7 @@ export function updateClientDebtList() {
     const emptyMessage = hasClients
       ? 'No hay clientes que coincidan con la búsqueda y el filtro.'
       : 'Todavía no hay clientes. Agregá uno para comenzar.';
-    $tbody.append($('<tr>').append($('<td colspan="4">').addClass('text-muted text-center').text(emptyMessage)));
+    $tbody.append($('<tr>').append($('<td colspan="3">').addClass('text-muted text-center').text(emptyMessage)));
     return;
   }
 
@@ -77,11 +77,12 @@ export function updateClientDebtList() {
     const $balance = $('<td>').addClass(balance > 0 ? 'client-balance has-debt' : 'client-balance')
       .text(money(balance));
 
+    const $clientName = $('<div>').addClass('client-name-line')
+      .append($('<strong>').text(c.name), $btns);
     const $row = $('<tr>').append(
-      $('<td>').addClass('client-name-cell').append($('<strong>').text(c.name), $contact),
+      $('<td>').addClass('client-name-cell').append($clientName, $contact),
       $('<td>').append($movement),
-      $balance,
-      $('<td>').addClass('client-actions').append($btns)
+      $balance
     );
 
     const $personalInfo = $('<div>').addClass('client-info-grid').append(
@@ -99,7 +100,7 @@ export function updateClientDebtList() {
       $historyContent
     );
     const $infoRow = $('<tr>').addClass('personal-info-row').attr({ id: infoId, 'aria-hidden': 'true' }).hide()
-      .append($('<td colspan="4">').append($personalInfo, $history));
+      .append($('<td colspan="3">').append($personalInfo, $history));
 
     $tbody.append($row, $infoRow);
   });

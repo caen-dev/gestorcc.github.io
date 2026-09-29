@@ -2,7 +2,7 @@
 
 import { clients } from './state.js?v=20260928-8';
 import { escapeHtml, money, parseLocalDate } from './utils.js?v=20260928-8';
-import * as uiAlerts from './uiAlerts.js?v=20260928-8';
+import * as uiAlerts from './uiAlerts.js?v=20260928-18';
 
 export function initDashboard() {
   $('#refresh-stats-btn').on('click', () => {

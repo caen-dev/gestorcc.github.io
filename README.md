@@ -2,9 +2,9 @@
 
 Aplicación web para llevar clientes, compras y pagos de un comercio pequeño. La interfaz usa módulos JavaScript nativos y guarda los registros localmente en IndexedDB del navegador.
 
-La interfaz usa una paleta discreta azul y gris, con modos claro y oscuro. El encabezado destaca la marca y abre un menú animado de herramientas desde la izquierda; el selector de tema está dentro de ese menú. El resumen está oculto en la pantalla principal y se muestra únicamente desde la herramienta **Resumen**.
+La interfaz usa una paleta ejecutiva en tonos verde petróleo, marfil y detalles dorados, con modos claro y oscuro coordinados. La marca se destaca en un encabezado oscuro; desde allí se abre un menú animado de herramientas y el selector de tema. El resumen está oculto en la pantalla principal y se muestra únicamente desde la herramienta **Resumen**.
 
-El acceso **Resumen** del menú muestra cuatro métricas, cuyos indicadores abren detalles; **Cerrar resumen** lo oculta nuevamente. El directorio separa cliente, contacto, cantidad/fecha del último movimiento, saldo y acciones; los filtros de saldo/orden quedan agrupados bajo el buscador. El menú funciona con teclado, se cierra con Escape y conserva el foco visible. El cuadro de ajustes mantiene el foco dentro del diálogo y oculta el contenido de fondo a tecnologías de asistencia. Los controles principales y las acciones por cliente tienen áreas táctiles amplias.
+El acceso **Resumen** del menú muestra cuatro métricas, cuyos indicadores abren detalles; **Cerrar resumen** lo oculta nuevamente. El directorio organiza en tres columnas: cliente (con sus datos de contacto y botones de información/edición), movimientos recientes y saldo. Los filtros de saldo y orden quedan agrupados bajo el buscador. El menú funciona con teclado, se cierra con Escape y conserva el foco visible. El cuadro de ajustes mantiene el foco dentro del diálogo y oculta el contenido de fondo a tecnologías de asistencia. Los controles principales y las acciones por cliente tienen áreas táctiles amplias.
 
 ## Uso
 

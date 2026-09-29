@@ -1,6 +1,6 @@
 'use strict';
 
-import * as uiAlerts from './uiAlerts.js?v=20260928-8';
+import * as uiAlerts from './uiAlerts.js?v=20260928-18';
 
 const KEY_NAME = 'cuentasplus:businessName';
 const KEY_PHONE = 'cuentasplus:businessPhone';
