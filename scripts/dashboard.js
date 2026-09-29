@@ -1,36 +1,14 @@
 'use strict';
 
-import { clients } from './state.js';
-import { money, parseLocalDate } from './utils.js';
-import * as uiAlerts from './uiAlerts.js';
+import { clients } from './state.js?v=20260928-8';
+import { escapeHtml, money, parseLocalDate } from './utils.js?v=20260928-8';
+import * as uiAlerts from './uiAlerts.js?v=20260928-8';
 
 export function initDashboard() {
-  const $panel = $('#dashboard-panel');
-  const $backdrop = $('#dashboard-backdrop');
-
-  const openDashboard = () => {
-    $panel.addClass('open').attr('aria-hidden', 'false');
-    $backdrop.addClass('show').attr('aria-hidden', 'false');
-    updateStats();
-  };
-
-  const closeDashboard = () => {
-    $panel.removeClass('open').attr('aria-hidden', 'true');
-    $backdrop.removeClass('show').attr('aria-hidden', 'true');
-  };
-
-  $('#open-dashboard-btn').on('click', openDashboard);
-  $('#close-dashboard-btn').on('click', closeDashboard);
-  $backdrop.on('click', closeDashboard);
-  $(document).on('keydown', (e) => (e.key === 'Escape' && $panel.hasClass('open')) && closeDashboard());
-
   $('#refresh-stats-btn').on('click', () => {
     updateStats();
-    uiAlerts.toast('Dashboard actualizada 🔄');
+    uiAlerts.toast('Resumen actualizado');
   });
-
-  $('#export-csv-btn').on('click', () =>
-    uiAlerts.info('Exportar CSV', 'Usá el botón “Exportar” del encabezado para elegir formato.'));
 
   $('.stat-card').on('click', (e) => showCardModal($(e.currentTarget).data('type')));
 }
@@ -38,8 +16,7 @@ export function initDashboard() {
 // --------------------------------------------------------
 
 function showCardModal(type) {
-  const dark = document.body.classList.contains('dark-mode');
-  const styleClass = dark ? 'swal2-dark' : 'swal2-light';
+  const styleClass = document.body.classList.contains('dark-mode') ? 'swal2-dark' : 'swal2-light';
 
   if (type === 'clients') return modalClients(styleClass);
   if (type === 'debt') return modalDebt(styleClass);
@@ -53,16 +30,16 @@ function modalClients(styleClass) {
   const rows = Object.values(clients)
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(c =>
-      `<tr><td>${c.name}</td><td>${money(c.balance)}</td><td>${c.phone}</td></tr>`
+      `<tr><td>${escapeHtml(c.name)}</td><td>${money(c.balance)}</td><td>${escapeHtml(c.phone)}</td></tr>`
     ).join('') || `<tr><td colspan="3" class="text-muted">Sin clientes</td></tr>`;
 
   Swal.fire({
     title: 'Clientes registrados',
     html: wrapTable(`
-      <thead><tr><th>Cliente</th><th>Saldo</th><th>Teléfono</th></tr></thead>
-      <tbody>${rows}</tbody>`),
+      <thead><tr><th scope="col">Cliente</th><th scope="col">Saldo</th><th scope="col">Teléfono</th></tr></thead>
+      <tbody>${rows}</tbody>`, 'Clientes, saldo y teléfono'),
     customClass: { popup: styleClass },
-    confirmButtonColor: '#0d6efd'
+    confirmButtonColor: uiAlerts.getThemeColors().accent
   });
 }
 
@@ -74,18 +51,18 @@ function modalDebt(styleClass) {
 
   const rows = list.length
     ? list.map(c =>
-        `<tr><td>${c.name}</td><td>${money(c.balance)}</td></tr>`
+        `<tr><td>${escapeHtml(c.name)}</td><td>${money(c.balance)}</td></tr>`
       ).join('')
     : `<tr><td colspan="2" class="text-muted">No hay deudores</td></tr>`;
 
   Swal.fire({
     title: 'Top deudores',
     html: wrapTable(`
-      <thead><tr><th>Cliente</th><th>Deuda</th></tr></thead>
-      <tbody>${rows}</tbody>`),
+      <thead><tr><th scope="col">Cliente</th><th scope="col">Deuda</th></tr></thead>
+      <tbody>${rows}</tbody>`, 'Clientes con mayor deuda'),
     icon: list.length ? 'info' : 'success',
     customClass: { popup: styleClass },
-    confirmButtonColor: '#0d6efd'
+    confirmButtonColor: uiAlerts.getThemeColors().accent
   });
 }
 
@@ -95,7 +72,7 @@ function modalPayments(styleClass) {
 
   Object.values(clients).forEach(c =>
     (c.transactions || []).forEach(t => {
-      if (t.type !== 'payment') return;
+      if (t.type !== 'payment' && t.type !== 'Pago') return;
       const d = parseLocalDate(t.date);
       if (!d) return;
       if (d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()) {
@@ -109,17 +86,17 @@ function modalPayments(styleClass) {
         .sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date))
         .slice(0, 20)
         .map(p =>
-          `<tr><td>${p.date}</td><td>${p.cliente}</td><td>${money(p.amount)}</td><td>${p.paymentMethod}</td></tr>`
+          `<tr><td>${escapeHtml(p.date)}</td><td>${escapeHtml(p.cliente)}</td><td>${money(p.amount)}</td><td>${escapeHtml(p.paymentMethod)}</td></tr>`
         ).join('')
     : `<tr><td colspan="4" class="text-muted">Sin pagos este mes</td></tr>`;
 
   Swal.fire({
     title: 'Pagos del mes',
     html: wrapTable(`
-      <thead><tr><th>Fecha</th><th>Cliente</th><th>Monto</th><th>Método</th></tr></thead>
-      <tbody>${rows}</tbody>`),
+      <thead><tr><th scope="col">Fecha</th><th scope="col">Cliente</th><th scope="col">Monto</th><th scope="col">Método</th></tr></thead>
+      <tbody>${rows}</tbody>`, 'Pagos del mes'),
     customClass: { popup: styleClass },
-    confirmButtonColor: '#0d6efd'
+    confirmButtonColor: uiAlerts.getThemeColors().accent
   });
 }
 
@@ -130,26 +107,27 @@ function modalDebtors(styleClass) {
 
   const rows = list.length
     ? list.map(d =>
-        `<tr><td>${d.name}</td><td>${money(d.balance)}</td></tr>`
+        `<tr><td>${escapeHtml(d.name)}</td><td>${money(d.balance)}</td></tr>`
       ).join('')
     : `<tr><td colspan="2" class="text-muted">Sin clientes con deuda</td></tr>`;
 
   Swal.fire({
     title: 'Clientes con deuda',
     html: wrapTable(`
-      <thead><tr><th>Cliente</th><th>Saldo</th></tr></thead>
-      <tbody>${rows}</tbody>`),
+      <thead><tr><th scope="col">Cliente</th><th scope="col">Saldo</th></tr></thead>
+      <tbody>${rows}</tbody>`, 'Clientes con saldo pendiente'),
     customClass: { popup: styleClass },
-    confirmButtonColor: '#0d6efd'
+    confirmButtonColor: uiAlerts.getThemeColors().accent
   });
 }
 
 // -------------------------- HELPERS ----------------------
 
-function wrapTable(innerHTML) {
+function wrapTable(innerHTML, caption) {
   return `
     <div class="table-responsive">
       <table class="table table-sm table-striped mb-0">
+        <caption class="sr-only">${caption}</caption>
         ${innerHTML}
       </table>
     </div>`;
@@ -175,7 +153,7 @@ function computeStats() {
     if (bal > 0) debtorsCount++;
 
     (c.transactions || []).forEach(t => {
-      if (t.type !== 'payment') return;
+      if (t.type !== 'payment' && t.type !== 'Pago') return;
       const d = parseLocalDate(t.date);
       if (!d) return;
       if (d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()) {
