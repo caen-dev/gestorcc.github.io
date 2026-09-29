@@ -132,13 +132,13 @@
         <h2>Registrar movimiento</h2>
       </div>
 
-      <label for="client-filter">Buscador inteligente de clientes</label>
+      <label for="client-filter">Buscador de clientes</label>
       <div class="client-search">
         <input
           type="search"
           id="client-filter"
           class="form-control form-control-lg"
-          placeholder="Escribí un nombre, teléfono o domicilio"
+          placeholder="Buscar..."
           aria-autocomplete="list"
           aria-controls="client-search-results"
           aria-expanded="false"
@@ -148,7 +148,7 @@
         />
         <ul id="client-search-results" class="client-search-results" role="listbox" aria-label="Clientes encontrados" hidden></ul>
       </div>
-      <small id="client-search-hint" class="form-text text-muted">Buscá por nombre o contacto y elegí un resultado para seleccionarlo.</small>
+      <small id="client-search-hint" class="form-text text-muted">Buscá el cliente.</small>
       <span id="client-search-status" class="sr-only" aria-live="polite"></span>
 
       <div class="form-group">
@@ -173,7 +173,7 @@
           class="form-control form-control-lg"
           placeholder="Monto (ej: 1.234,56)" aria-describedby="amount-hint" required
         />
-        <small id="amount-hint" class="form-text text-muted">Podés usar coma o punto para los decimales. Máximo dos decimales.</small>
+        <small id="amount-hint" class="form-text text-muted"></small>
       </div>
 
       <div class="form-group">
@@ -261,7 +261,7 @@
       <p id="client-list-count" class="small text-muted" aria-live="polite"></p>
       <div class="table-responsive">
         <table id="debt-list" class="table table-bordered table-striped">
-          <caption class="sr-only">Directorio de clientes con teléfono y domicilio, cantidad y fecha de movimientos y saldo. Las acciones están junto al nombre de cada cliente.</caption>
+          <caption class="sr-only">Directorio de clientes.</caption>
           <thead class="thead-dark">
             <tr>
               <th scope="col">Cliente</th>
