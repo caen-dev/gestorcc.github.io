@@ -33,7 +33,8 @@ El porcentaje es una estimación, no una certificación de producto terminado. P
 - Se simplificó la presentación a una paleta azul/gris discreta, paneles planos y encabezados directos; los formularios aparecen primero, las cuatro métricas compactas quedan debajo y el directorio sigue a continuación.
 - El encabezado concentra la marca Cuentas+ y un botón de herramientas a la izquierda; exportar, respaldo, ajustes, resumen y tema aparecen en un panel desplegable animado, operable por teclado y cerrable con Escape o al pulsar fuera.
 - El resumen de cuentas queda oculto al iniciar y solo se muestra desde la herramienta **Resumen**, con cierre explícito y métricas conservadas.
-- El directorio separa las columnas de cliente, contacto, movimientos (cantidad y fecha de la última actividad), saldo y acciones. Se validan fechas reales al determinar el último movimiento, y el detalle expandido ocupa correctamente todas las columnas.
+- El directorio presenta cliente y contacto juntos, seguidos por movimientos (cantidad y fecha de la última actividad), saldo y acciones; conserva los controles de información y edición por cliente. Se validan fechas reales al determinar el último movimiento, y el detalle expandido ocupa correctamente todas las columnas.
+- La guía inicial aparece solo cuando no hay clientes guardados y se oculta al crear el primero; los títulos de las tarjetas y los botones de acción tienen jerarquía tipográfica clara y adaptable.
 - En pantallas estrechas la tabla conserva columnas legibles con desplazamiento horizontal dentro de su propio contenedor, sin ensanchar la página.
 - Se integró el buscador del directorio en el encabezado de la sección, junto al título en escritorio y debajo del título en móvil; los filtros de saldo y orden quedan agrupados y alineados aparte.
 - La capa visual mantiene foco visible, controles táctiles de 44 px, tema oscuro y soporte de movimiento reducido sin animaciones decorativas persistentes.

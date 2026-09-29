@@ -2,7 +2,7 @@
 
 import { clients } from './state.js?v=20260928-8';
 import { saveClient } from './db.js?v=20260928-8';
-import { updateClientDebtList, updateClientSelect } from './ui.js?v=20260928-15';
+import { updateClientDebtList, updateClientSelect } from './ui.js?v=20260928-16';
 import { updateStats } from './dashboard.js?v=20260928-15';
 import { todayStr, isEmpty, formatMoneyLive, parseMoneyToNumber } from './utils.js?v=20260928-8';
 import * as uiAlerts from './uiAlerts.js?v=20260928-8';
