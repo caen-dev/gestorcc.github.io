@@ -1,5 +1,39 @@
+'use strict';
+
+import {
+  parseMoneyToCents,
+  formatMoneyFromCents,
+  formatMoneyLive as liveFormatMoney
+} from './currency.js';
+
 export const LOCALE = 'es-AR';
-export const money = (n) => `$${Number(n || 0).toLocaleString(LOCALE)}`;
+
+/**
+ * money(value)
+ *
+ * IMPORTANT: all monetary values in the app should be stored internally as integer cents.
+ * This helper formats either:
+ * - integer cents (preferred internal value), or
+ * - legacy decimal dollars (compatibility fallback)
+ *
+ * Example:
+ *   money(150)      -> "$1,50"
+ *   money(100000)   -> "$1.000,00"
+ *   money(1000.5)   -> "$1.000,50"
+ */
+export const money = (n) => {
+  const value = Number(n ?? 0);
+  if (!Number.isFinite(value)) return '$0,00';
+
+  // Preferred internal representation: integer cents.
+  if (Number.isInteger(value)) {
+    return formatMoneyFromCents(value);
+  }
+
+  // Legacy fallback: decimal dollars -> convert to cents for formatting.
+  return formatMoneyFromCents(Math.round(value * 100));
+};
+
 export const todayStr = () => new Date().toLocaleDateString(LOCALE);
 export const formatDateForPDF = (date) => new Intl.DateTimeFormat(LOCALE).format(date);
 export const todayFileStr = () => {
@@ -42,37 +76,17 @@ export function parseLocalDate(str) {
   return isNaN(d.getTime()) ? null : d;
 }
 
-// Formateo en vivo y parseo de montos con formato AR
+// NOTE: This remains only as compatibility wrapper for the older codebase.
+// The project standard is: parseMoneyToCents() from currency.js.
 export function formatMoneyLive(raw) {
-  const value = String(raw ?? '');
-  if (!value) return '';
-  if (/[^0-9.,]/.test(value) || (value.match(/,/g) || []).length > 1) return value;
-  const commaIndex = value.indexOf(',');
-  if (commaIndex >= 0 && value.length - commaIndex - 1 > 2) return value;
-
-  let v = value.replace(/\./g, '');
-  if (commaIndex < 0) {
-    const decimalPoint = /^(\d+)\.(\d{0,2})$/.exec(value);
-    if (decimalPoint) v = `${decimalPoint[1]},${decimalPoint[2]}`;
-  }
-  const parts = v.split(',');
-  let intPart = parts[0] || '';
-  let decPart = (parts[1] || '').slice(0, 2);
-  intPart = intPart.replace(/^0+(?=\d)/, '');
-  intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return v.includes(',') ? `${intPart},${decPart}` : intPart;
+  return liveFormatMoney(raw);
 }
+
 export function parseMoneyToNumber(str) {
-  if (!str) return NaN;
-  const value = String(str).trim();
-  const isDotDecimal = /^\d+\.\d{1,2}$/.test(value);
-  if (!isDotDecimal && !/^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(value)) return NaN;
-  const normalized = isDotDecimal ? value : value.replace(/\./g, '').replace(',', '.');
-  const n = Number(normalized);
-  return Number.isFinite(n) ? n : NaN;
+  return parseMoneyToCents(str);
 }
 
-// Tema oscuro (igual a tu lógica actual)
+// Tema oscuro
 export function initTheme() {
   const DARK_KEY = 'gestorcc:darkmode';
   const toggleSwitch = document.getElementById('toggle-dark-mode');
