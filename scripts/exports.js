@@ -1,13 +1,13 @@
 'use strict';
 
-import { clients } from './state.js?v=20260928-8';
 import { money, todayFileStr, formatDateForPDF } from './utils.js?v=20260928-8';
 import { loadBusinessInfo, saveBusinessInfo } from './settings.js?v=20260928-8';
 import { replaceAllClients } from './db.js?v=20260928-8';
-import { validateBackup } from './backup.js?v=20260928-8';
+import { validateBackup, preFlightCheckBackup, createBackupObject } from './backup.js?v=20260928-8';
 import { buildClientSummaryRows, buildTransactionRows, serializeCSV } from './report.js?v=20260928-8';
 import { updateClientSelect, updateClientDebtList } from './ui.js?v=20260928-18';
 import { updateStats } from './dashboard.js?v=20260928-15';
+import { clients } from './state.js?v=20260928-8';
 import * as uiAlerts from './uiAlerts.js?v=20260928-18';
 
 export function initExportWizard() {
@@ -75,28 +75,62 @@ export function initExportWizard() {
 
     try {
       const contents = JSON.parse(await file.text());
-      const { business: restoredBusiness, clients: restoredClients } = validateBackup(contents);
+      
+      // Validate and normalize backup data
+      let validatedBackup;
+      try {
+        validatedBackup = validateBackup(contents);
+      } catch (validationErr) {
+        console.error('Validation error:', validationErr);
+        return uiAlerts.error('Copia inválida', validationErr?.message || String(validationErr));
+      }
+
+      // Pre-flight check for warnings
+      const preflight = preFlightCheckBackup(validatedBackup);
+      if (!preflight.isValid) {
+        return uiAlerts.error('Copia corrupta', preflight.errors.join('\n'));
+      }
+
+      // Show warnings if any
+      if (preflight.warnings.length > 0) {
+        console.warn('Backup warnings:', preflight.warnings);
+      }
+
+      // Extract validated data
+      const { business: restoredBusiness, clients: restoredClients } = validatedBackup;
+      
+      // Format export date for display
       const exportedAt = new Date(contents.exportedAt);
       const backupDate = Number.isNaN(exportedAt.getTime())
         ? 'No indicada'
         : new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium', timeStyle: 'short' }).format(exportedAt);
+
+      // Count transactions
       const transactionCount = restoredClients.reduce(
         (count, client) => count + client.transactions.length,
         0
       );
+
+      // Request confirmation with clear data summary
       const confirmed = await uiAlerts.confirm(
         'Revisá y confirmá la restauración',
-        `Comercio: ${restoredBusiness.name || 'Sin nombre'}\nFecha de la copia: ${backupDate}\nClientes: ${restoredClients.length}\nMovimientos: ${transactionCount}\n\nAl continuar, se reemplazarán los clientes, movimientos y ajustes de este dispositivo. Esta acción no se puede deshacer.`
+        `Comercio: ${restoredBusiness.name || 'Sin nombre'}\nFecha de la copia: ${backupDate}\nClientes: ${restoredClients.length}\nMovimientos: ${transactionCount}\n\nAl continuar, se reemplazarán todos tus datos actuales.`
       );
       if (!confirmed) return;
 
+      // Backup current business info for rollback
       const previousBusiness = loadBusinessInfo();
       let businessUpdateStarted = false;
+
       try {
+        // Update business info first
         businessUpdateStarted = true;
         saveBusinessInfo(restoredBusiness);
+        
+        // Then replace all clients
         await replaceAllClients(restoredClients);
       } catch (err) {
+        // Rollback if something fails
         if (businessUpdateStarted) {
           try {
             saveBusinessInfo(previousBusiness);
@@ -107,11 +141,15 @@ export function initExportWizard() {
         }
         throw err;
       }
+
+      // Update UI state
       Object.keys(clients).forEach((name) => { delete clients[name]; });
       restoredClients.forEach((client) => { clients[client.name] = client; });
+      
       updateClientSelect();
       updateClientDebtList();
       updateStats();
+      
       uiAlerts.toast('Copia restaurada correctamente ✅');
     } catch (err) {
       console.error(err);
@@ -122,17 +160,18 @@ export function initExportWizard() {
   });
 }
 
+/**
+ * Exports current business state as JSON backup.
+ * 
+ * Uses createBackupObject() from backup.js to ensure all monetary values
+ * are integer cents and structure is standardized.
+ */
 function exportBackup() {
-  const backup = {
-    format: 'cuentasplus-backup',
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    business: loadBusinessInfo(),
-    clients: Object.values(clients).map((client) => ({
-      ...client,
-      transactions: (client.transactions || []).map((transaction) => ({ ...transaction }))
-    }))
-  };
+  const backup = createBackupObject(
+    loadBusinessInfo(),
+    Object.values(clients)
+  );
+
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -232,7 +271,7 @@ async function exportPDF() {
   doc.text(`Fecha: ${formatDateForPDF(new Date())}`, marginX, cursorY);
   cursorY += 10;
 
-  // Tabla principal
+  // Tabla principal — balances formatted via money() which handles cents correctly
   const tableData = Object.values(clients).map(c => {
     const last = c.transactions?.length
       ? c.transactions[c.transactions.length - 1].date
