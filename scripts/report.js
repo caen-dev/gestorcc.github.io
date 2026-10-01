@@ -35,7 +35,7 @@ export function buildTransactionRows(clients) {
         transaction.date,
         client.name,
         type,
-        money(transaction.amount),
+        money(transaction.amountCents ?? transaction.amount ?? 0),
         transaction.paymentMethod || '-'
       ]);
     }
